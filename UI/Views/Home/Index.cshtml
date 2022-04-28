@@ -1,0 +1,53 @@
+﻿@model UI.Models.IndexVM
+@using Entities
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>El Boticario de Fray Guillermo</h1>
+<div class="row-col-md-11">
+    <form method="post">
+        @Html.DropDownListFor(x => Model.CategoriaSeleccionada.IdCategoria, new SelectList(Model.ListaCategorias, "IdCategoria", "NombreCategoria", Model.CategoriaSeleccionada.NombreCategoria))
+        <Input type="submit" value="Elegir Categoria">
+    </form>
+</div>
+<div>
+    @if (@Model.ListaPlantas.Count > 0)
+    {
+        <table typeof="table">
+            <thead>
+                <tr>
+                    <td>
+                        Nombre
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model.ListaPlantas)
+                {
+                    <tr>
+                        <td>
+                            @item.NombrePlanta
+                        </td>
+                        @{
+                            if (@item.Precio == 0)
+                            {
+                                <td>
+                                    @Html.ActionLink("Establecer Precio", "PonerPrecio", new {  id=item.IdPlanta, separator = "." }) |
+                                </td>
+                            }
+                            else
+                            {
+                                @item.Precio
+                            }
+                        }
+
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    }
+</div>
