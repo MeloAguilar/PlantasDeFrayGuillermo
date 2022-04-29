@@ -5,7 +5,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>El Boticario de Fray Guillermo</h1>
+<h6>Elija una Categoría</h6>
 <div class="row-col-md-11">
     <form method="post">
         @Html.DropDownListFor(x => Model.CategoriaSeleccionada.IdCategoria, new SelectList(Model.ListaCategorias, "IdCategoria", "NombreCategoria", Model.CategoriaSeleccionada.NombreCategoria))
@@ -15,12 +15,16 @@
 <div>
     @if (@Model.ListaPlantas.Count > 0)
     {
-        <table typeof="table">
+        <table class="table">
             <thead>
                 <tr>
                     <td>
                         Nombre
                     </td>
+                    <td>
+                        Precio
+                    </td>
+                    <td></td>
                 </tr>
             </thead>
             <tbody>
@@ -31,18 +35,15 @@
                         <td>
                             @item.NombrePlanta
                         </td>
-                        @{
-                            if (@item.Precio == 0)
-                            {
+
                                 <td>
-                                    @Html.ActionLink("Establecer Precio", "PonerPrecio", new {  id=item.IdPlanta, separator = "." }) |
+                                    @item.Precio €
                                 </td>
-                            }
-                            else
-                            {
-                                @item.Precio
-                            }
-                        }
+                                
+                                  
+                                <td>
+                                    @Html.ActionLink("Modificar Precio", "PonerPrecio", new {  id=item.IdPlanta}) 
+                                </td>
 
                     </tr>
 

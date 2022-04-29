@@ -43,11 +43,21 @@ namespace UI.Controllers
 
 
         [HttpPost]
-        public IActionResult PonerPrecio(clsPlanta p)
+        public IActionResult PonerPrecio(clsPlanta planta, string precio)
         {
-                        
-            gestionBL.EstablecerPrecioPlanta(p.IdPlanta, p.Precio);
-            return View(p);
+            
+            try
+            {
+                planta = listasBl.RecogerPlantaBL(planta.IdPlanta);
+                planta.Precio = Convert.ToDouble(precio);
+                gestionBL.EstablecerPrecioPlantaBL(planta.IdPlanta, planta.Precio);
+            }
+            catch (Exception e) 
+            {
+                planta = null;
+            }
+            
+            return View(planta);
         }
         public IActionResult Privacy()
         {

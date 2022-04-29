@@ -14,6 +14,8 @@ namespace DAL.Listados
         clsMyConnection miConexion = new clsMyConnection();
 
         /// <summary>
+        /// List<clsPlanta> RecogerListadoCompletoPlantas()
+        /// 
         /// Método que se encarga de traer una lista de las plantas 
         /// que se encuentran en la Base de Datos FrayGuillermo
         /// </summary>
@@ -53,6 +55,8 @@ namespace DAL.Listados
 
 
         /// <summary>
+        /// List<clsPlanta> RecogerPlantasDeCategoria(int id)
+        /// 
         /// Método que se encarga de recoger una lista de plantas de la 
         /// Base de datos. El id de la categoria de esa planta debe coincidir 
         /// con el entero aportado como parámetro
@@ -93,6 +97,8 @@ namespace DAL.Listados
 
 
         /// <summary>
+        /// List<clsCategoria> RecogerListadoCompletoCategorias()
+        /// 
         /// Método que se encarga de rescatar una lista de Categorias de plantas de la Base de Datos
         /// 
         /// </summary>
@@ -125,10 +131,12 @@ namespace DAL.Listados
 
 
         /// <summary>
+        /// clsPlanta RecogerPlanta(int id)
         /// 
+        /// Método encargado de extraer un objeto clsPlanta de una base de daatos
         /// </summary>
         /// <param name="id"></param>
-        /// <returns></returns>
+        /// <returns>clsPlanta p</returns>
         public clsPlanta RecogerPlanta(int id)
         {
             clsPlanta p = new clsPlanta();
@@ -149,7 +157,7 @@ namespace DAL.Listados
                     p.NombrePlanta = (string)reader["nombrePlanta"];
                     p.Descripcion = (string)reader["descripcion"];
 
-                    if (reader["precio"] != DBNull.Value)
+                    if (reader["precio"] != DBNull.Value && (double)reader["precio"] != 0)
                     {
                         p.Precio = (double)reader["precio"];
                     }

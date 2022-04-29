@@ -12,7 +12,19 @@ namespace DAL.Gestion
     {
         clsMyConnection miConexion = new clsMyConnection();
 
-
+        /// <summary>
+        /// bool EstablecerPrecioPlanta(int idPlanta, double precio)
+        /// 
+        /// Método que se encarga de establecer el atributo precio de un objeto clsPlata 
+        /// que coincidirá con la misma tabla de la Base de Datos
+        /// a partir de dos parámetros de entrada, "idPlanta" que será
+        /// el atributo IdPlanta y "precio" que sera el atributo Precio de un 
+        /// objeto clsPlanta. Devolverá un booleano que indicará si se realizío o no
+        /// la sentencia update que se envió hacia la BBDD
+        /// </summary>
+        /// <param name="idPlanta"></param>
+        /// <param name="precio"></param>
+        /// <returns>bool exito</returns>
         public bool EstablecerPrecioPlanta(int idPlanta, double precio)
         {
             bool exito;

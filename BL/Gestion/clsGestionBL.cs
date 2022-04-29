@@ -14,7 +14,7 @@ namespace BL.Gestion
         clsGestionPlantas gestionDal = new clsGestionPlantas();
         clsListadosPlantas listasDal = new clsListadosPlantas();
 
-        public bool EstablecerPrecioPlanta(int id, double precio)
+        public bool EstablecerPrecioPlantaBL(int id, double precio)
         {
             bool exito = false;
             clsPlanta p = listasDal.RecogerPlanta(id);

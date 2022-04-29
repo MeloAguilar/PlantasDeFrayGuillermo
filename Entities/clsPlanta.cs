@@ -14,6 +14,8 @@ namespace Entities
         public string Descripcion { get; set; }
         public int IdCategoria { get; set; }
         [Required(ErrorMessage = "Se debe establecer un precio para la planta")]
+
+        [Range(0.01, 100.01, ErrorMessage="El valor de {0} debe ser mayor que {1} y menor que {2}")]
         public double Precio { get; set; }
 
 
