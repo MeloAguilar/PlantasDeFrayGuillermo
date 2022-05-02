@@ -61,7 +61,7 @@ namespace DAL.Listados
         /// Base de datos. El id de la categoria de esa planta debe coincidir 
         /// con el entero aportado como parámetro
         /// </summary>
-        /// <param name="id"> id de una categoria de plantas</param>
+        /// <param name="id"> id de un objeto clsCategoria</param>
         /// <returns>List clsPlanta</returns>
         public List<clsPlanta> RecogerPlantasDeCategoria(int id)
         {
@@ -133,9 +133,10 @@ namespace DAL.Listados
         /// <summary>
         /// clsPlanta RecogerPlanta(int id)
         /// 
-        /// Método encargado de extraer un objeto clsPlanta de una base de daatos
+        /// Método encargado de extraer un objeto clsPlanta de una base de datos
+        /// a partir de un entero que debe coincidir con el idPlanta de un objeto clsPlanta
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">id de un objeto clsPlanta</param>
         /// <returns>clsPlanta p</returns>
         public clsPlanta RecogerPlanta(int id)
         {
@@ -166,7 +167,14 @@ namespace DAL.Listados
             return p;
         }
 
-
+        /// <summary>
+        /// clsCategoria RecogerCategoria(int id)
+        /// 
+        /// Método que se encarga de rescatar un objeto de tipo 
+        /// clsCategoria de la Base de Datos
+        /// </summary>
+        /// <param name="id"> id de un objeto clsCategoria</param>
+        /// <returns>clsCategoria c</returns>
         public clsCategoria RecogerCategoria(int id)
         {
             SqlCommand cmd = new SqlCommand();

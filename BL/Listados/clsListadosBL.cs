@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace BL.Listados
 {
+    //Preguntar si a estas clases les hace falta los summary
     public class clsListadosBL
     {
         clsListadosPlantas dal = new clsListadosPlantas();

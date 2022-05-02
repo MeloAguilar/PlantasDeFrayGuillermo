@@ -44,7 +44,7 @@
                             <h4><label asp-for="Precio" class="control-label">Precio</label></h4>
                         </dt>
                         <dl>
-                            <input name="precio" />
+                            <input asp-for="Precio" class= "form-control" />
                             <input asp-for="IdPlanta" class="form-control" type="hidden" />
                             <input type="submit" value="Guardar" class="btn btn-primary" />
                         </dl>
@@ -53,7 +53,8 @@
                     }
                     else
                     {
-                        <dt>                        <h4><label asp-for="Precio" class="control-label">Precio    @Html.DisplayFor(x => Model.Precio) €</label></h4>
+                        <dt>
+                        <h4><label asp-for="Precio" class="control-label">Precio:    @Html.DisplayFor(x => Model.Precio) €</label></h4>
 </dt>
                     }
 
