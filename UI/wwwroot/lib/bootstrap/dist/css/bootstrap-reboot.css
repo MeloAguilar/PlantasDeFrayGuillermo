@@ -30,6 +30,13 @@ body {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+headerIndex {
+    background-image: src(lib/imgs/plantasmedicinales-t.jpg);
+    border-image-source:image(plantasmedicinales-t.jpg);
+    margin: 1rem 0;
+    color: inherit;
+    background-color: currentColor;
+}
 hr {
   margin: 1rem 0;
   color: inherit;
@@ -158,6 +165,8 @@ mark {
   padding: 0.2em;
   background-color: #fcf8e3;
 }
+
+
 
 sub,
 sup {
