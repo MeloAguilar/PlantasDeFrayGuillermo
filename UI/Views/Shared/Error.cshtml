@@ -5,7 +5,17 @@
 
 <h1 class="text-danger">Error.</h1>
 <h2 class="text-danger">An error occurred while processing your request.</h2>
+@{
+    if (!@ViewBag.Error.Equals(null))
+    {
+        <div>
+            <p>@ViewBag.Error</p>
+        </div>
+    }
+}
+
+
 <footer><a asp-action="Index">Volver al Inicio</a></footer>
- 
+
 
 

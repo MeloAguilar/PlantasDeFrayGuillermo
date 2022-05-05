@@ -115,10 +115,11 @@ namespace DAL.Listados
             }
             catch (Exception e)
             {
-                plantas.Clear();
+                throw e;
             }
             finally
             {
+                //VS me ha obligao
                 if (conn != null)
                     miConexion.closeConnection(ref conn);
             }
@@ -164,10 +165,11 @@ namespace DAL.Listados
             }
             catch (Exception e)
             {
-                categorias.Clear();
+                throw e;
             }
             finally
             {
+                //Por asegurarme 
                 if(conn != null)    
                     miConexion.closeConnection(ref conn);
                 if (reader != null)
@@ -219,7 +221,7 @@ namespace DAL.Listados
             }
             catch (Exception e)
             {
-                p = null;
+                throw e;
             }
             finally
             {
@@ -270,7 +272,7 @@ namespace DAL.Listados
             }
             catch (Exception e)
             {
-                c = null;
+                throw e;
             }
             finally
             {

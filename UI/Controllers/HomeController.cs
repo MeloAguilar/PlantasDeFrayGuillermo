@@ -31,11 +31,19 @@ namespace UI.Controllers
         [HttpPost]
         public IActionResult Index(IndexVM virtualVM)
         {
+            try
+            {
+                //Recojo solo las plantas que necesito, sin llenar la memoria con el resto que no vamos a utilizar
+                vm.ListaPlantas = listasBl.RecogerPlantasDeCategoriaBL(virtualVM.CategoriaSeleccionada.IdCategoria);
+                //Establezco la categoria seleccionada
+                vm.CategoriaSeleccionada = listasBl.RecogerCategoriaBL(virtualVM.CategoriaSeleccionada.IdCategoria);
 
-            //Recojo solo las plantas que necesito, sin llenar la memoria con el resto que no vamos a utilizar
-            vm.ListaPlantas = listasBl.RecogerPlantasDeCategoriaBL(virtualVM.CategoriaSeleccionada.IdCategoria);
-            //Establezco la categoria seleccionada
-            vm.CategoriaSeleccionada = listasBl.RecogerCategoriaBL(virtualVM.CategoriaSeleccionada.IdCategoria);
+            }
+            catch (Exception e)
+            {
+                ViewBag.Error = "Error al recoger las categorias de la base de datos";
+                return View("Error");
+            }
             return View(vm);
         }
 
@@ -44,7 +52,17 @@ namespace UI.Controllers
         {
             //Gracias al helper que nos dará directamente el id de la planta
             //recogeremos esa planta para mostrarla en la vista PonerPrecio
-            clsPlanta planta = listasBl.RecogerPlantaBL(id);
+            clsPlanta planta = null;
+            try
+            {
+                planta = listasBl.RecogerPlantaBL(id);
+            }
+            catch (Exception e)
+            {
+                ViewBag.Error = "Error al establecer la planta";
+                return View("Error");
+            }
+
             return View(planta);
         }
 
@@ -59,14 +77,18 @@ namespace UI.Controllers
                 //No se como hacerlo de forma más profesional
                 exito = gestionBL.EstablecerPrecioPlantaBL(planta.IdPlanta, planta.Precio);
                 planta = listasBl.RecogerPlantaBL(planta.IdPlanta);
-                if (!exito) { throw new Exception(); }
+                if (!exito)
+                {
+                    Exception ex = new Exception();
+                    throw ex;
+                }
             }
-            catch (Exception e) 
+            catch (Exception e)
             {
                 //Preguntar como hacer errores propios para que quede claro que es lo que ha fallado
                 return View("Error");
             }
-            
+
             return View(planta);
         }
         public IActionResult Privacy()
