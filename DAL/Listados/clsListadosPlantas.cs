@@ -23,11 +23,13 @@ namespace DAL.Listados
         public List<clsPlanta> RecogerListadoCompletoPlantas()
         {
             List<clsPlanta> plantas = new List<clsPlanta>();
-             
-            SqlCommand cmd = new SqlCommand();
-            SqlDataReader reader;
 
-                SqlConnection conn = miConexion.getConnection();
+            SqlCommand cmd = new SqlCommand();
+            SqlDataReader reader = null;
+            SqlConnection conn = null; 
+            try
+            {
+                conn = miConexion.getConnection();
                 cmd.Connection = conn;
                 cmd.CommandText = "Select * From plantas";
                 reader = cmd.ExecuteReader();
@@ -40,16 +42,29 @@ namespace DAL.Listados
                         planta.IdPlanta = (int)reader["idPlanta"];
                         planta.NombrePlanta = (string)reader["nombrePlanta"];
                         planta.Descripcion = (string)reader["descripcion"];
-                    if (reader["precio"] != DBNull.Value)
-                    {
-                        planta.Precio = (double)reader["precio"];
-                    }
-                       
+                        if (reader["precio"] != DBNull.Value)
+                        {
+                            planta.Precio = (double)reader["precio"];
+                        }
+
 
                         plantas.Add(planta);
                     }
                 }
-           
+            }
+            catch (Exception e)
+            {
+                plantas.Clear();
+            }
+            finally
+            {
+                if (reader != null)
+                    reader.Close();
+                if(conn != null)
+                    miConexion.closeConnection(ref conn);
+            }
+
+
             return plantas;
         }
 
@@ -66,32 +81,48 @@ namespace DAL.Listados
         public List<clsPlanta> RecogerPlantasDeCategoria(int id)
         {
             List<clsPlanta> plantas = new List<clsPlanta>();
-           
+
             SqlCommand cmd = new SqlCommand();
             SqlDataReader reader;
-            SqlConnection conn = miConexion.getConnection();
-            cmd.Connection= conn;
-            cmd.Parameters.AddWithValue("@idCategoria", id);
-            cmd.CommandText = "Select * From plantas Where idCategoria = @idCategoria ";
-            reader = cmd.ExecuteReader();
-            while (reader.Read())
+
+
+            SqlConnection conn = null;
+            try
             {
-                if (reader.HasRows)
+                conn = miConexion.getConnection();
+                cmd.Connection= conn;
+                cmd.Parameters.AddWithValue("@idCategoria", id);
+                cmd.CommandText = "Select * From plantas Where idCategoria = @idCategoria ";
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    clsPlanta p = new clsPlanta();
-                    p.IdCategoria = (int)reader["idCategoria"];
-                    p.IdPlanta = (int)reader["idPlanta"];
-                    p.NombrePlanta = (string)reader["nombrePlanta"];
-                    p.Descripcion = (string)reader["descripcion"];
-
-                    if (reader["precio"] != DBNull.Value)
+                    if (reader.HasRows)
                     {
-                        p.Precio = (double)reader["precio"];
-                    }
+                        clsPlanta p = new clsPlanta();
+                        p.IdCategoria = (int)reader["idCategoria"];
+                        p.IdPlanta = (int)reader["idPlanta"];
+                        p.NombrePlanta = (string)reader["nombrePlanta"];
+                        p.Descripcion = (string)reader["descripcion"];
 
-                    plantas.Add(p);
+                        if (reader["precio"] != DBNull.Value)
+                        {
+                            p.Precio = (double)reader["precio"];
+                        }
+
+                        plantas.Add(p);
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                plantas.Clear();
+            }
+            finally
+            {
+                if (conn != null)
+                    miConexion.closeConnection(ref conn);
+            }
+            
             return plantas;
         }
 
@@ -108,24 +139,42 @@ namespace DAL.Listados
             List<clsCategoria> categorias = new List<clsCategoria>();
 
             SqlCommand cmd = new SqlCommand();
-            SqlConnection conn = miConexion.getConnection();
-            cmd.Connection = conn;
-            SqlDataReader reader;
-            cmd.CommandText = "Select * From categorias";
-            reader = cmd.ExecuteReader();
-            while (reader.Read())
+            SqlConnection conn = null;
+            SqlDataReader reader = null;
+            try
             {
-                if (reader.HasRows)
-                {
-                    clsCategoria c = new clsCategoria();
-                    c.IdCategoria = (int)reader["idCategoria"];
-                    c.NombreCategoria = (string)reader["nombreCategoria"];
-
-
-                    categorias.Add(c);
-                }
+                conn = miConexion.getConnection();
+                cmd.Connection = conn;
                 
+                cmd.CommandText = "Select * From categorias";
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    if (reader.HasRows)
+                    {
+                        clsCategoria c = new clsCategoria();
+                        c.IdCategoria = (int)reader["idCategoria"];
+                        c.NombreCategoria = (string)reader["nombreCategoria"];
+
+
+                        categorias.Add(c);
+                    }
+
+                }
             }
+            catch (Exception e)
+            {
+                categorias.Clear();
+            }
+            finally
+            {
+                if(conn != null)    
+                    miConexion.closeConnection(ref conn);
+                if (reader != null)
+                    reader.Close();
+            }
+
+
             return categorias;
         }
 
@@ -142,28 +191,47 @@ namespace DAL.Listados
         {
             clsPlanta p = new clsPlanta();
             SqlCommand cmd = new SqlCommand();
-            SqlDataReader reader;
-            SqlConnection conn = miConexion.getConnection();
-            cmd.Connection= conn;
-            cmd.Parameters.AddWithValue("@idPlanta", id);
-            cmd.CommandText = "Select * From plantas Where idPlanta = @idPlanta ";
-            reader = cmd.ExecuteReader();
-            while (reader.Read())
+            SqlDataReader reader = null;
+            SqlConnection conn = null;
+            try
             {
-                if (reader.HasRows)
+                conn = miConexion.getConnection();
+                cmd.Connection= conn;
+                cmd.Parameters.AddWithValue("@idPlanta", id);
+                cmd.CommandText = "Select * From plantas Where idPlanta = @idPlanta ";
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    
-                    p.IdCategoria = (int)reader["idCategoria"];
-                    p.IdPlanta = (int)reader["idPlanta"];
-                    p.NombrePlanta = (string)reader["nombrePlanta"];
-                    p.Descripcion = (string)reader["descripcion"];
-
-                    if (reader["precio"] != DBNull.Value && (double)reader["precio"] != 0)
+                    if (reader.HasRows)
                     {
-                        p.Precio = (double)reader["precio"];
+
+                        p.IdCategoria = (int)reader["idCategoria"];
+                        p.IdPlanta = (int)reader["idPlanta"];
+                        p.NombrePlanta = (string)reader["nombrePlanta"];
+                        p.Descripcion = (string)reader["descripcion"];
+
+                        if (reader["precio"] != DBNull.Value && (double)reader["precio"] != 0)
+                        {
+                            p.Precio = (double)reader["precio"];
+                        }
                     }
                 }
             }
+            catch (Exception e)
+            {
+                p = null;
+            }
+            finally
+            {
+                if (reader != null)
+                    reader.Close();
+
+                if (conn != null)
+                    miConexion.closeConnection(ref conn);
+            }
+
+
+
             return p;
         }
 
@@ -179,22 +247,39 @@ namespace DAL.Listados
         {
             SqlCommand cmd = new SqlCommand();
             clsCategoria c = new clsCategoria();
-            SqlConnection conn = miConexion.getConnection();
-            cmd.Connection = conn;
-            SqlDataReader reader;
-            cmd.Parameters.AddWithValue("@idCategoria", id);
-            cmd.CommandText = "Select * From categorias Where idCategoria = @idCategoria";
-            reader = cmd.ExecuteReader();
-            while (reader.Read())
+            SqlConnection conn = null;
+            SqlDataReader reader = null;
+            try
             {
-                if (reader.HasRows)
-                {
-                    
-                    c.IdCategoria = (int)reader["idCategoria"];
-                    c.NombreCategoria = (string)reader["nombreCategoria"];
-                }
+                conn = miConexion.getConnection();
+                cmd.Connection = conn;
 
+                cmd.Parameters.AddWithValue("@idCategoria", id);
+                cmd.CommandText = "Select * From categorias Where idCategoria = @idCategoria";
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    if (reader.HasRows)
+                    {
+
+                        c.IdCategoria = (int)reader["idCategoria"];
+                        c.NombreCategoria = (string)reader["nombreCategoria"];
+                    }
+
+                }
             }
+            catch (Exception e)
+            {
+                c = null;
+            }
+            finally
+            {
+                if (conn != null)
+                    conn.Close();
+                if (reader != null)
+                    reader.Close();
+            }
+
             return c;
         }
     }

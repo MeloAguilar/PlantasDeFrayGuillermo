@@ -28,9 +28,10 @@ namespace DAL.Gestion
         public bool EstablecerPrecioPlanta(int idPlanta, double precio)
         {
             bool exito;
+            SqlConnection cnn = null;
             try {
             SqlCommand miComando = new SqlCommand();
-            SqlConnection cnn = miConexion.getConnection();
+            cnn = miConexion.getConnection();
             miComando.Connection = cnn;
             miComando.Parameters.AddWithValue("@IdPlanta", idPlanta);
             miComando.Parameters.AddWithValue("@precio", precio);
@@ -41,6 +42,10 @@ namespace DAL.Gestion
             catch (Exception e)
             {
                 exito = false;
+            }finally
+            {
+                if(cnn != null)
+                    miConexion.closeConnection(ref cnn);
             }
             return exito;
         }
