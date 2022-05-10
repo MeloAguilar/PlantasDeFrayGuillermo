@@ -13,61 +13,6 @@ namespace DAL.Listados
     {
         clsMyConnection miConexion = new clsMyConnection();
 
-        /// <summary>
-        /// List<clsPlanta> RecogerListadoCompletoPlantas()
-        /// 
-        /// Método que se encarga de traer una lista de las plantas 
-        /// que se encuentran en la Base de Datos FrayGuillermo
-        /// </summary>
-        /// <returns>List clsPlanta</returns>
-        public List<clsPlanta> RecogerListadoCompletoPlantas()
-        {
-            List<clsPlanta> plantas = new List<clsPlanta>();
-
-            SqlCommand cmd = new SqlCommand();
-            SqlDataReader reader = null;
-            SqlConnection conn = null; 
-            try
-            {
-                conn = miConexion.getConnection();
-                cmd.Connection = conn;
-                cmd.CommandText = "Select * From plantas";
-                reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    if (reader.HasRows)
-                    {
-                        clsPlanta planta = new clsPlanta();
-                        planta.IdCategoria = (int)reader["idCategoria"];
-                        planta.IdPlanta = (int)reader["idPlanta"];
-                        planta.NombrePlanta = (string)reader["nombrePlanta"];
-                        planta.Descripcion = (string)reader["descripcion"];
-                        if (reader["precio"] != DBNull.Value)
-                        {
-                            planta.Precio = (double)reader["precio"];
-                        }
-
-
-                        plantas.Add(planta);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                plantas.Clear();
-            }
-            finally
-            {
-                if (reader != null)
-                    reader.Close();
-                if(conn != null)
-                    miConexion.closeConnection(ref conn);
-            }
-
-
-            return plantas;
-        }
-
 
         /// <summary>
         /// List<clsPlanta> RecogerPlantasDeCategoria(int id)

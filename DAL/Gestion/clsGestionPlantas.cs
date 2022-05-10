@@ -10,44 +10,52 @@ namespace DAL.Gestion
 {
     public class clsGestionPlantas
     {
+
         clsMyConnection miConexion = new clsMyConnection();
 
         /// <summary>
-        /// bool EstablecerPrecioPlanta(int idPlanta, double precio)
+        /// <header>bool EstablecerPrecioPlanta(int idPlanta, double precio)</header>
         /// 
-        /// Método que se encarga de establecer el atributo precio de un objeto clsPlata 
+        /// Función que se encarga de establecer el atributo precio de un objeto clsPlata 
         /// que coincidirá con la misma tabla de la Base de Datos
         /// a partir de dos parámetros de entrada, "idPlanta" que será
         /// el atributo IdPlanta y "precio" que sera el atributo Precio de un 
-        /// objeto clsPlanta. Devolverá un booleano que indicará si se realizío o no
-        /// la sentencia update que se envió hacia la BBDD
+        /// objeto clsPlanta. Devolverá un entero que indicará 
+        /// cuantas columnas han sido afectadas en la BBDD
+        /// <precondition>Ninguna.</precondition>
+        /// <postcondition>la salida será 0 o 1</postcondition>
         /// </summary>
         /// <param name="idPlanta"></param>
         /// <param name="precio"></param>
-        /// <returns>bool exito</returns>
-        public bool EstablecerPrecioPlanta(int idPlanta, double precio)
+        /// <returns>int referente al número de filas afectadas en la base de datos</returns>
+        public int EstablecerPrecioPlanta(int idPlanta, double precio)
         {
-            bool exito;
+            int columnasAfectadas;
             SqlConnection cnn = null;
-            try {
-            SqlCommand miComando = new SqlCommand();
-            cnn = miConexion.getConnection();
-            miComando.Connection = cnn;
-            miComando.Parameters.AddWithValue("@IdPlanta", idPlanta);
-            miComando.Parameters.AddWithValue("@precio", precio);
-            miComando.CommandText = "Update plantas set precio = @precio Where idPlanta = @IdPlanta";
-            miComando.ExecuteNonQuery();
-            exito = true;
+            try
+            {
+                SqlCommand miComando = new SqlCommand();
+                cnn = miConexion.getConnection();
+                miComando.Connection = cnn;
+                miComando.Parameters.AddWithValue("@IdPlanta", idPlanta);
+                miComando.Parameters.AddWithValue("@precio", precio);
+                miComando.CommandText = "Update plantas set precio = @precio Where idPlanta = @IdPlanta";
+                columnasAfectadas = miComando.ExecuteNonQuery();
+
             }
             catch (Exception e)
             {
-                exito = false;
-            }finally
+                throw e;
+            }
+            finally
             {
-                if(cnn != null)
+                if (cnn != null)
                     miConexion.closeConnection(ref cnn);
             }
-            return exito;
+            return columnasAfectadas;
         }
     }
+
+
+
 }

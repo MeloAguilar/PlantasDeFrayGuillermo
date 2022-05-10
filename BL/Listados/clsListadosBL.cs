@@ -13,10 +13,6 @@ namespace BL.Listados
     {
         clsListadosPlantas dal = new clsListadosPlantas();
 
-        public List<clsPlanta> RecogerListadoPlantasBL()
-        {
-            return dal.RecogerListadoCompletoPlantas();
-        }
 
 
         public List<clsCategoria> RecogerListadoCategoriasBL()

@@ -38,8 +38,7 @@
                     {
                         @ViewBag.error
                     }
-                    if (Model.Precio == 0.00)
-                    {
+               
                         <dt>
                             <h4><label asp-for="Precio" class="control-label">Precio</label></h4>
                         </dt>
@@ -50,14 +49,7 @@
                         </dl>
 
 
-                    }
-                    else
-                    {
-                        <dt>
-                        <h4><label asp-for="Precio" class="control-label">Precio:    @Html.DisplayFor(x => Model.Precio) €</label></h4>
-</dt>
-                    }
-
+ 
                 }
 
             </div>

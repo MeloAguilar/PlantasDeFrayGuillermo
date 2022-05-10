@@ -34,7 +34,7 @@ namespace UI.Controllers
             try
             {
                 //Recojo solo las plantas que necesito, sin llenar la memoria con el resto que no vamos a utilizar
-                vm.ListaPlantas = listasBl.RecogerPlantasDeCategoriaBL(virtualVM.CategoriaSeleccionada.IdCategoria);
+                vm.ListaPlantasDeCategoriaSeleccionada = listasBl.RecogerPlantasDeCategoriaBL(virtualVM.CategoriaSeleccionada.IdCategoria);
                 //Establezco la categoria seleccionada
                 vm.CategoriaSeleccionada = listasBl.RecogerCategoriaBL(virtualVM.CategoriaSeleccionada.IdCategoria);
 
@@ -71,22 +71,30 @@ namespace UI.Controllers
         public IActionResult PonerPrecio(clsPlanta planta)
         {
             //Esto
-            bool exito;
+            int exito;
             try
             {
                 //No se como hacerlo de forma más profesional
                 exito = gestionBL.EstablecerPrecioPlantaBL(planta.IdPlanta, planta.Precio);
-                planta = listasBl.RecogerPlantaBL(planta.IdPlanta);
-                if (!exito)
+                
+                if (exito == 0)
                 {
-                    Exception ex = new Exception();
-                    throw ex;
+                    ViewBag.Error = "No se encontró ninguna planta con estos datos";
+                    return View(planta);
+                }
+                else if(exito == 1)
+                {
+                    planta = listasBl.RecogerPlantaBL(planta.IdPlanta);
+                    ViewBag.Exito = "Se estableció con éxito el precio de la planta";
+                    return View(planta);
                 }
             }
             catch (Exception e)
             {
+
+                ViewBag.Error = "Algo no funciona en la Base de Datos. Intentelo más tarde";
                 //Preguntar como hacer errores propios para que quede claro que es lo que ha fallado
-                return View("Error");
+                return View(planta);
             }
 
             return View(planta);

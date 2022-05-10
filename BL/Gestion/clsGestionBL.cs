@@ -28,15 +28,15 @@ namespace BL.Gestion
         /// <returns> bool exito -> true: se ha podido establecer el precio de la clsPlanta
         ///                         false: no se ha podido establecer el precio de la clsPlanta
         /// </returns>
-        public bool EstablecerPrecioPlantaBL(int id, double precio)
+        public int EstablecerPrecioPlantaBL(int id, double precio)
         {
-            bool exito = false;
+            int columnasAfectadas = 0;
             clsPlanta p = listasDal.RecogerPlanta(id);
             if (p.Precio == 0)
             {
-                exito = gestionDal.EstablecerPrecioPlanta(id, precio);
+                columnasAfectadas = gestionDal.EstablecerPrecioPlanta(id, precio);
             }
-            return exito;
+            return columnasAfectadas;
         }
     }
 }
