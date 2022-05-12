@@ -54,8 +54,34 @@ namespace DAL.Gestion
             }
             return columnasAfectadas;
         }
+        public int ModificarCategoriaDePlanta(int idCategoria, int idPlanta)
+        {
+            int columnasAfectadas;
+            SqlConnection cnn = null;
+            try
+            {
+                SqlCommand miComando = new SqlCommand();
+                cnn = miConexion.getConnection();
+                miComando.Connection = cnn;
+                miComando.Parameters.AddWithValue("@IdPlanta", idPlanta);
+                miComando.Parameters.AddWithValue("@precio",idCategoria);
+                miComando.CommandText = "Update plantas set idCategoria = @idCategoria Where idPlanta = @IdPlanta";
+                columnasAfectadas = miComando.ExecuteNonQuery();
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                if (cnn != null)
+                    miConexion.closeConnection(ref cnn);
+            }
+            return columnasAfectadas;
+        }
     }
 
 
-
+    
 }

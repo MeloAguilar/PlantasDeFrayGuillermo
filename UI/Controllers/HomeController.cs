@@ -12,19 +12,20 @@ namespace UI.Controllers
         private clsListadosBL listasBl = new clsListadosBL();
         private clsGestionBL gestionBL = new clsGestionBL();
         private readonly ILogger<HomeController> _logger;
-        private IndexVM vm = new IndexVM();
+        private IndexVM indexVM = new IndexVM();
+        private CambioDeCategoriaVM cambioDeCategoriaVM = new CambioDeCategoriaVM();
 
 
         //Al inicializarlo pido directamente el listado de categorias ya que es un listado pequeño
         public HomeController(ILogger<HomeController> logger)
         {
-            vm.ListaCategorias = listasBl.RecogerListadoCategoriasBL();
+            indexVM.ListaCategorias = listasBl.RecogerListadoCategoriasBL();
             _logger = logger;
         }
 
         public IActionResult Index()
         {
-            return View(vm);
+            return View(indexVM);
         }
 
 
@@ -34,9 +35,9 @@ namespace UI.Controllers
             try
             {
                 //Recojo solo las plantas que necesito, sin llenar la memoria con el resto que no vamos a utilizar
-                vm.ListaPlantasDeCategoriaSeleccionada = listasBl.RecogerPlantasDeCategoriaBL(virtualVM.CategoriaSeleccionada.IdCategoria);
+                indexVM.ListaPlantasDeCategoriaSeleccionada = listasBl.RecogerPlantasDeCategoriaBL(virtualVM.CategoriaSeleccionada.IdCategoria);
                 //Establezco la categoria seleccionada
-                vm.CategoriaSeleccionada = listasBl.RecogerCategoriaBL(virtualVM.CategoriaSeleccionada.IdCategoria);
+                indexVM.CategoriaSeleccionada = listasBl.RecogerCategoriaBL(virtualVM.CategoriaSeleccionada.IdCategoria);
 
             }
             catch (Exception e)
@@ -44,7 +45,7 @@ namespace UI.Controllers
                 ViewBag.Error = "Error al recoger las categorias de la base de datos";
                 return View("Error");
             }
-            return View(vm);
+            return View(indexVM);
         }
 
 
@@ -99,6 +100,22 @@ namespace UI.Controllers
 
             return View(planta);
         }
+
+
+        public IActionResult CambioDeCategoria()
+        {
+            cambioDeCategoriaVM.Categorias = listasBl.RecogerListadoCategoriasBL();
+            cambioDeCategoriaVM.Plantas = listasBl.RecogerListadoCompletoPlantasBL();
+            return View(cambioDeCategoriaVM); 
+        }
+
+
+
+        [HttpPost]
+
+
+
+
         public IActionResult Privacy()
         {
             return View();

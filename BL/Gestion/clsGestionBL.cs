@@ -30,13 +30,12 @@ namespace BL.Gestion
         /// </returns>
         public int EstablecerPrecioPlantaBL(int id, double precio)
         {
-            int columnasAfectadas = 0;
-            clsPlanta p = listasDal.RecogerPlanta(id);
-            if (p.Precio == 0)
-            {
-                columnasAfectadas = gestionDal.EstablecerPrecioPlanta(id, precio);
-            }
-            return columnasAfectadas;
+            return gestionDal.EstablecerPrecioPlanta(id, precio);
+        }
+
+        public int ModificarCategoriaDePlantaBL(int idCat, int idPlanta)
+        {
+            return gestionDal.ModificarCategoriaDePlanta(idCat, idPlanta);
         }
     }
 }

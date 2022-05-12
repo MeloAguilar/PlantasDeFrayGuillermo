@@ -1,0 +1,51 @@
+﻿@model UI.Models.CambioDeCategoriaVM
+
+<form method="post">
+        @Html.DropDownListFor(x => Model.CategoriaSeleccionada.IdCategoria, new SelectList(Model.Categorias, "IdCategoria", "NombreCategoria", Model.CategoriaSeleccionada.NombreCategoria))
+        <Input type="submit" value="Elegir Categoria">
+    </form>
+
+    <div>
+    @if (@Model.PlantasSeleccionadas.Count > 0)
+    {
+        <form method="post" action="PlantasACambiar">
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>
+                        Nombre
+                    </td>
+                    <td>
+                        Categoria actual
+                    </td>
+                    <td>
+                        Cambiar a categoria @Model.CategoriaSeleccionada.NombreCategoria
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model.Plantas)
+                {
+                    <tr>
+                        <td>
+                            @item.NombrePlanta
+                        </td>
+
+                                <td>
+                                    @item.IdCategoria
+                                </td>
+                                
+                                  
+                                <td>
+                                    if(@item.IdCategoria == @Model.CategoriaSeleccionada.IdCategoria)
+                                   @Html.ActionLink().CheckBox(settings => {settings.Text = "Caption"  ;settings.Name = "OK";settings.ControlStyle.CssClass = "checkEditor";settings.Properties.ValueType = typeof(int);settings.Properties.ValueChecked = "true";settings.Properties.ValueUnchecked = "false";}).Bind("true").Render();
+
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+        </form>
+}
+}

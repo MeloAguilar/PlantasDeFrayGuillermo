@@ -9,6 +9,7 @@ namespace UI.Models
         public List<clsCategoria> ListaCategorias { get; set; }
         public clsCategoria CategoriaSeleccionada { get; set; }
 
+
         public IndexVM()
         {
             ListaPlantasDeCategoriaSeleccionada = new List<clsPlanta>();
