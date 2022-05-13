@@ -13,19 +13,32 @@ namespace UI.Controllers
         private clsGestionBL gestionBL = new clsGestionBL();
         private readonly ILogger<HomeController> _logger;
         private IndexVM indexVM = new IndexVM();
-        private CambioDeCategoriaVM cambioDeCategoriaVM = new CambioDeCategoriaVM();
+        private CambioDeCategoriaVM cambioDeCategoriaVM;
 
 
         //Al inicializarlo pido directamente el listado de categorias ya que es un listado pequeño
         public HomeController(ILogger<HomeController> logger)
         {
+            cambioDeCategoriaVM = new CambioDeCategoriaVM(listasBl.RecogerListadoCompletoPlantasBL());
+            cambioDeCategoriaVM.Categorias = listasBl.RecogerListadoCategoriasBL();
             indexVM.ListaCategorias = listasBl.RecogerListadoCategoriasBL();
             _logger = logger;
         }
 
         public IActionResult Index()
         {
-            return View(indexVM);
+
+            try
+            {
+                return View(indexVM);
+            }
+            catch (Exception e)
+            {
+                ViewBag.Error = "No se pudo conectar con la base de datos";
+                return View(indexVM);
+            }
+
+
         }
 
 
@@ -34,10 +47,12 @@ namespace UI.Controllers
         {
             try
             {
-                //Recojo solo las plantas que necesito, sin llenar la memoria con el resto que no vamos a utilizar
-                indexVM.ListaPlantasDeCategoriaSeleccionada = listasBl.RecogerPlantasDeCategoriaBL(virtualVM.CategoriaSeleccionada.IdCategoria);
                 //Establezco la categoria seleccionada
                 indexVM.CategoriaSeleccionada = listasBl.RecogerCategoriaBL(virtualVM.CategoriaSeleccionada.IdCategoria);
+                //Recojo solo las plantas que necesito, sin llenar la memoria con el resto que no vamos a utilizar
+                indexVM.ListaPlantasDeCategoriaSeleccionada = listasBl.RecogerPlantasDeCategoriaBL(indexVM.CategoriaSeleccionada.IdCategoria);
+
+
 
             }
             catch (Exception e)
@@ -77,13 +92,13 @@ namespace UI.Controllers
             {
                 //No se como hacerlo de forma más profesional
                 exito = gestionBL.EstablecerPrecioPlantaBL(planta.IdPlanta, planta.Precio);
-                
+
                 if (exito == 0)
                 {
                     ViewBag.Error = "No se encontró ninguna planta con estos datos";
                     return View(planta);
                 }
-                else if(exito == 1)
+                else if (exito == 1)
                 {
                     planta = listasBl.RecogerPlantaBL(planta.IdPlanta);
                     ViewBag.Exito = "Se estableció con éxito el precio de la planta";
@@ -102,16 +117,48 @@ namespace UI.Controllers
         }
 
 
-        public IActionResult CambioDeCategoria()
+        public IActionResult CambioDeCategoria(int idCategoria)
         {
             cambioDeCategoriaVM.Categorias = listasBl.RecogerListadoCategoriasBL();
-            cambioDeCategoriaVM.Plantas = listasBl.RecogerListadoCompletoPlantasBL();
-            return View(cambioDeCategoriaVM); 
+            return View(cambioDeCategoriaVM);
+        }
+
+
+        //TODO Probar a duplicar la página a ver si queda mejor ya que se podria elegir primero la categoria y despues las plantas de esta
+        [HttpPost]
+        public IActionResult CambioDeCategoria(CambioDeCategoriaVM vm)
+        {
+            vm = new CambioDeCategoriaVM(listasBl.RecogerListadoCompletoPlantasBL());
+            vm.CategoriaSeleccionada = listasBl.RecogerCategoriaBL(vm.CategoriaSeleccionada.IdCategoria);
+
+            int idPlanta = 0;
+            try
+            {
+                for (int i = 0; i < vm.RepresentacionDeLasPlantasSeleccionadas.Count; i++)
+                {
+                    if (vm.RepresentacionDeLasPlantasSeleccionadas[i])
+                    {
+                        idPlanta++;
+
+                        gestionBL.ModificarCategoriaDePlantaBL(vm.CategoriaSeleccionada.IdCategoria, idPlanta);
+
+
+
+                    }
+                }
+                ViewBag.Exito = "La categoria de las plantas seleccionadas se estableció con éxito.";
+            }
+            catch (Exception e)
+            {
+                ViewBag.Error = "Algo no funciona en la Base de Datos. Intentelo más tarde";
+                return View(vm);
+            }
+
+            return View(vm);
         }
 
 
 
-        [HttpPost]
 
 
 

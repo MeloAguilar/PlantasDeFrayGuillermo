@@ -13,12 +13,18 @@ namespace UI.Models
 
 
         public List<bool> RepresentacionDeLasPlantasSeleccionadas { get; set; }
-        public CambioDeCategoriaVM()
+        public CambioDeCategoriaVM(List<clsPlanta> ps)
         {
-            Plantas = new List<clsPlanta>();
+            Plantas = ps;
             Categorias = new List<clsCategoria>();
             CategoriaSeleccionada = new clsCategoria() { IdCategoria = 0, NombreCategoria = "" };
             RepresentacionDeLasPlantasSeleccionadas = new List<bool>();
+            foreach (var item in Plantas)
+            {
+                RepresentacionDeLasPlantasSeleccionadas.Add(false);
+            }
         }
+
+        public CambioDeCategoriaVM() { }
     }
 }

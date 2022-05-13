@@ -1,14 +1,18 @@
 ﻿@model UI.Models.CambioDeCategoriaVM
-
+  <div>
+            @if (ViewBag.Error != null)
+            {
+                @ViewBag.Error
+            }
+            else
+            {
+                @ViewBag.Exito
+            }
+        </div>
 <form method="post">
-        @Html.DropDownListFor(x => Model.CategoriaSeleccionada.IdCategoria, new SelectList(Model.Categorias, "IdCategoria", "NombreCategoria", Model.CategoriaSeleccionada.NombreCategoria))
-        <Input type="submit" value="Elegir Categoria">
-    </form>
+    
+      
 
-    <div>
-    @if (@Model.PlantasSeleccionadas.Count > 0)
-    {
-        <form method="post" action="PlantasACambiar">
         <table class="table">
             <thead>
                 <tr>
@@ -23,29 +27,60 @@
                     </td>
                 </tr>
             </thead>
-            <tbody>
 
-                @foreach (var item in Model.Plantas)
+            @{
+                int id = 0;
+                for (int i = 0; i < Model.Plantas.Count; i++)
                 {
-                    <tr>
-                        <td>
-                            @item.NombrePlanta
-                        </td>
+                    <tbody>
 
-                                <td>
-                                    @item.IdCategoria
-                                </td>
-                                
-                                  
-                                <td>
-                                    if(@item.IdCategoria == @Model.CategoriaSeleccionada.IdCategoria)
-                                   @Html.ActionLink().CheckBox(settings => {settings.Text = "Caption"  ;settings.Name = "OK";settings.ControlStyle.CssClass = "checkEditor";settings.Properties.ValueType = typeof(int);settings.Properties.ValueChecked = "true";settings.Properties.ValueUnchecked = "false";}).Bind("true").Render();
+                        <tr>
+                            <td>
+                            <input asp-for="@Model.Plantas.ElementAt(i).IdPlanta" class="form-control" type="hidden" />
+                            <input asp-for="@Model.Plantas.ElementAt(i).IdCategoria" class="form-control" type="hidden" />
+                                @Model.Plantas.ElementAt(i).NombrePlanta
+                            </td>
 
-                    </tr>
+                            <td>
+                                @for (int j = 0; j < @Model.Categorias.Count; j++)
+                                {
+                                    @if (@Model.Categorias.ElementAt(j).IdCategoria == @Model.Plantas.ElementAt(i).IdCategoria)
+                                    {
+                                        <input asp-for="@Model.Categorias.ElementAt(j).NombreCategoria" class="form-control" type="hidden" />
+                                        <input asp-for="@Model.Categorias.ElementAt(j).IdCategoria" class="form-control" type="hidden" />
+                                        @Model.Categorias.ElementAt(j).NombreCategoria;
 
+
+                                        j = @Model.Categorias.Count;
+                                    }
+                                }
+
+                            </td>
+
+
+                            <td>
+        
+
+                            </td>
+
+
+                        </tr>
+
+
+
+                    </tbody>
                 }
-            </tbody>
+            }
         </table>
-        </form>
-}
-}
+
+   
+    <div class="form-group">
+    @Html.DropDownListFor(x => Model.CategoriaSeleccionada.IdCategoria, new SelectList(Model.Categorias, "IdCategoria", "NombreCategoria", Model.CategoriaSeleccionada.NombreCategoria))
+
+    </div>
+
+    <div class="form-control">
+    <Input type="submit" value="Elegir Categoria y plantas">
+      </div>
+</form>
+

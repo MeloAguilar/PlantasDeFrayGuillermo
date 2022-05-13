@@ -6,55 +6,60 @@
 }
 
 <h6>Elija una Categoría</h6>
+<form method="post">
+    <div class="row-col-md-11">
 
-<div class="row-col-md-11">
-    <form method="post">
-        @Html.DropDownListFor(x => Model.CategoriaSeleccionada.IdCategoria, new SelectList(Model.ListaCategorias, "IdCategoria", "NombreCategoria", Model.CategoriaSeleccionada.NombreCategoria))
+        
+        @Html.DropDownListFor(x => Model.CategoriaSeleccionada.IdCategoria, new SelectList(@Model.ListaCategorias, "IdCategoria", "NombreCategoria", Model.CategoriaSeleccionada))
+        
         <Input type="submit" value="Elegir Categoria">
-    </form>
-</div>
-<div>
-    @if (@Model.ListaPlantasDeCategoriaSeleccionada.Count > 0)
-    {
-        <table class="table">
-            <thead>
-                <tr>
-                    <td>
-                        Nombre
-                    </td>
-                    <td>
-                        Precio
-                    </td>
-                    <td></td>
-                </tr>
-            </thead>
-            <tbody>
 
-                @foreach (var item in Model.ListaPlantasDeCategoriaSeleccionada)
-                {
+    </div>
+    
+    <div>
+        @if (@Model.ListaPlantasDeCategoriaSeleccionada.Count > 0)
+        {
+            <table class="table">
+                <thead>
                     <tr>
                         <td>
-                            @item.NombrePlanta
+                            Nombre
                         </td>
-
-                                <td>
-                                    @item.Precio €
-                                </td>
-                                
-                                  
-                                <td>
-                                    @Html.ActionLink("Modificar Precio", "PonerPrecio", new {  id=item.IdPlanta}) 
-                                </td>
-
+                        <td>
+                            Precio
+                        </td>
+                        <td></td>
                     </tr>
+                </thead>
+                <tbody>
 
-                }
-            </tbody>
-        </table>
-    }
-    <div>
-        <h6>¿Desea modificar las plantas de alguna categoría?</h6>
-        <p>@Html.ActionLink("Modificar plantas de las categorias", "CambioDeCateogria") </p>
+                    @foreach (var item in @Model.ListaPlantasDeCategoriaSeleccionada)
+                    {
+                        <tr>
+                            <td>
+                                @item.NombrePlanta
+                            </td>
+
+                            <td>
+                                @item.Precio €
+                            </td>
+
+
+                            <td>
+                                @Html.ActionLink("Modificar Precio", "PonerPrecio", new {  id=item.IdPlanta})
+                            </td>
+
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+
+        }
     </div>
-
+    </form>
+<div>
+    <h6>¿Desea modificar las plantas de alguna categoría?</h6>
+    <p>@Html.ActionLink("Modificar plantas de las categorias", "CambioDeCategoria", "Home") </p>
 </div>
+

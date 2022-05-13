@@ -34,16 +34,21 @@
 
 
                 @{
-                    if (ViewBag.error !=null)
+                    if (ViewBag.error != null)
                     {
                         @ViewBag.error
+
                     }
-               
+                    else if(ViewBag.Exito != null)
+                    {
+                        <h4>@ViewBag.Exito</h4>
+                    }
+
                         <dt>
-                            <h4><label asp-for="Precio" class="control-label">Precio</label></h4>
+                            @Html.EditorFor(m => m.Precio)
                         </dt>
                         <dl>
-                            <input asp-for="Precio" class= "form-control" />
+                            
                             <input asp-for="IdPlanta" class="form-control" type="hidden" />
                             <input type="submit" value="Guardar" class="btn btn-primary" />
                         </dl>

@@ -25,7 +25,7 @@ namespace DAL.Conexion
             this.dataBase = "FrayGuillermo";
             
             //prueba2
-            this.user = "prueba";
+            this.user = "prueba2";
             this.pass = "1234";
 
         }

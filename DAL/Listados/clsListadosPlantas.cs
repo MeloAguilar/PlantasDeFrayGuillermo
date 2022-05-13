@@ -41,6 +41,7 @@ namespace DAL.Listados
                 if (reader.HasRows)
                 {
                     c.IdCategoria = (int)reader["idCategoria"];
+                    if (reader["nombreCategoria"] != DBNull.Value)
                     c.NombreCategoria = (string)reader["nombreCategoria"];
 
                 }
@@ -215,7 +216,7 @@ namespace DAL.Listados
         List<clsCategoria> categorias = new List<clsCategoria>();
 
         SqlCommand cmd = new SqlCommand();
-        SqlConnection conn = null;
+        SqlConnection conn = new SqlConnection();
         SqlDataReader reader = null;
         try
         {
@@ -275,6 +276,7 @@ namespace DAL.Listados
             cmd.Parameters.AddWithValue("@idPlanta", id);
             cmd.CommandText = "Select * From plantas Where idPlanta = @idPlanta ";
             reader = cmd.ExecuteReader();
+            while(reader.Read())
             p = GenerarPlanta(reader);
         }
         catch (Exception e)
@@ -317,7 +319,11 @@ namespace DAL.Listados
             cmd.Parameters.AddWithValue("@idCategoria", id);
             cmd.CommandText = "Select * From categorias Where idCategoria = @idCategoria";
             reader = cmd.ExecuteReader();
-            c = GenerarCategoria(reader);
+                while (reader.Read()) 
+                {
+                    c = GenerarCategoria(reader); 
+                }
+            
         }
         catch (Exception e)
         {
