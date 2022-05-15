@@ -19,8 +19,7 @@ namespace UI.Controllers
         //Al inicializarlo pido directamente el listado de categorias ya que es un listado pequeño
         public HomeController(ILogger<HomeController> logger)
         {
-            cambioDeCategoriaVM = new CambioDeCategoriaVM(listasBl.RecogerListadoCompletoPlantasBL());
-            cambioDeCategoriaVM.Categorias = listasBl.RecogerListadoCategoriasBL();
+            cambioDeCategoriaVM = new CambioDeCategoriaVM();
             indexVM.ListaCategorias = listasBl.RecogerListadoCategoriasBL();
             _logger = logger;
         }
@@ -117,43 +116,58 @@ namespace UI.Controllers
         }
 
 
-        public IActionResult CambioDeCategoria(int idCategoria)
+        public IActionResult CambioDeCategoria()
         {
+            cambioDeCategoriaVM = new CambioDeCategoriaVM();
+            cambioDeCategoriaVM.Plantas = listasBl.RecogerListadoCompletoPlantasBL();
+            cambioDeCategoriaVM.CategoriaSeleccionada = new clsCategoria();
             cambioDeCategoriaVM.Categorias = listasBl.RecogerListadoCategoriasBL();
+            
             return View(cambioDeCategoriaVM);
         }
 
 
-        //TODO Probar a duplicar la página a ver si queda mejor ya que se podria elegir primero la categoria y despues las plantas de esta
+
+
         [HttpPost]
         public IActionResult CambioDeCategoria(CambioDeCategoriaVM vm)
         {
-            vm = new CambioDeCategoriaVM(listasBl.RecogerListadoCompletoPlantasBL());
-            vm.CategoriaSeleccionada = listasBl.RecogerCategoriaBL(vm.CategoriaSeleccionada.IdCategoria);
-
+            int filas = 0;
             int idPlanta = 0;
             try
             {
-                for (int i = 0; i < vm.RepresentacionDeLasPlantasSeleccionadas.Count; i++)
+
+                for (int i = 0; i < vm.Plantas.Count; i++)
                 {
-                    if (vm.RepresentacionDeLasPlantasSeleccionadas[i])
+                    idPlanta++;
+                    if (vm.Plantas.ElementAt(i).SeleccionadaParaCambioDeCategoria)
                     {
-                        idPlanta++;
+                        
 
-                        gestionBL.ModificarCategoriaDePlantaBL(vm.CategoriaSeleccionada.IdCategoria, idPlanta);
-
-
-
+                        filas += gestionBL.ModificarCategoriaDePlantaBL(vm.CategoriaSeleccionada.IdCategoria, idPlanta); 
                     }
                 }
+                if(filas > 0)
                 ViewBag.Exito = "La categoria de las plantas seleccionadas se estableció con éxito.";
+                else
+                {
+                    ViewBag.Error = "No se realizaon modificaciones en la Base de Datos";
+                }
             }
             catch (Exception e)
             {
                 ViewBag.Error = "Algo no funciona en la Base de Datos. Intentelo más tarde";
                 return View(vm);
             }
-
+            vm.Plantas = listasBl.RecogerListadoCompletoPlantasBL();
+            vm.Categorias = listasBl.RecogerListadoCategoriasBL();
+            foreach(var item in vm.Plantas)
+            {
+                if(item.IdCategoria == vm.CategoriaSeleccionada.IdCategoria)
+                {
+                    item.SeleccionadaParaCambioDeCategoria = true;
+                }
+            }
             return View(vm);
         }
 

@@ -11,20 +11,11 @@ namespace UI.Models
         public clsCategoria CategoriaSeleccionada { get; set; }
 
 
-
-        public List<bool> RepresentacionDeLasPlantasSeleccionadas { get; set; }
-        public CambioDeCategoriaVM(List<clsPlanta> ps)
+        public CambioDeCategoriaVM()
         {
-            Plantas = ps;
-            Categorias = new List<clsCategoria>();
-            CategoriaSeleccionada = new clsCategoria() { IdCategoria = 0, NombreCategoria = "" };
-            RepresentacionDeLasPlantasSeleccionadas = new List<bool>();
-            foreach (var item in Plantas)
-            {
-                RepresentacionDeLasPlantasSeleccionadas.Add(false);
-            }
+            Plantas = new List<clsPlanta>();
+            Categorias =  new List<clsCategoria>();
+            CategoriaSeleccionada = new clsCategoria();
         }
-
-        public CambioDeCategoriaVM() { }
     }
 }

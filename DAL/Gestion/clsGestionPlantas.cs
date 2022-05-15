@@ -64,8 +64,8 @@ namespace DAL.Gestion
                 cnn = miConexion.getConnection();
                 miComando.Connection = cnn;
                 miComando.Parameters.AddWithValue("@IdPlanta", idPlanta);
-                miComando.Parameters.AddWithValue("@precio",idCategoria);
-                miComando.CommandText = "Update plantas set idCategoria = @idCategoria Where idPlanta = @IdPlanta";
+                miComando.Parameters.AddWithValue("@IdCategoria",idCategoria);
+                miComando.CommandText = "Update plantas set idCategoria = @IdCategoria Where idPlanta = @IdPlanta";
                 columnasAfectadas = miComando.ExecuteNonQuery();
 
             }

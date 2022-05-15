@@ -1,86 +1,76 @@
 ﻿@model UI.Models.CambioDeCategoriaVM
-  <div>
-            @if (ViewBag.Error != null)
-            {
-                @ViewBag.Error
-            }
-            else
-            {
-                @ViewBag.Exito
-            }
-        </div>
-<form method="post">
-    
-      
+@using Entities
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <td>
-                        Nombre
-                    </td>
-                    <td>
-                        Categoria actual
-                    </td>
-                    <td>
-                        Cambiar a categoria @Model.CategoriaSeleccionada.NombreCategoria
-                    </td>
-                </tr>
-            </thead>
+@{
+    ViewData["Title"] = "CambioDeCategoria";
+}
 
-            @{
-                int id = 0;
-                for (int i = 0; i < Model.Plantas.Count; i++)
-                {
-                    <tbody>
+<h1>CambioDeCategoria</h1>
+@if (ViewBag.Error != null)
+{
+    <h4>@ViewBag.Error</h4>
+}
+else if(@ViewBag.Exito != null)
+{
+    <h4>@ViewBag.Exito</h4>
+}
 
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CambioDeCategoria">
+            <div>
+                @Html.DropDownListFor(x => Model.CategoriaSeleccionada.IdCategoria, new SelectList(@Model.Categorias, "IdCategoria", "NombreCategoria", Model.CategoriaSeleccionada.NombreCategoria))
+
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>
+                            @Html.DisplayNameFor(m => m.CategoriaSeleccionada.IdCategoria)
+                        </td>
+                        <td>
+                            @Html.DisplayNameFor(m => m.Plantas.ElementAt(1).IdPlanta)
+                        </td>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < @Model.Plantas.Count; i++)
+                    {
                         <tr>
                             <td>
-                            <input asp-for="@Model.Plantas.ElementAt(i).IdPlanta" class="form-control" type="hidden" />
-                            <input asp-for="@Model.Plantas.ElementAt(i).IdCategoria" class="form-control" type="hidden" />
-                                @Model.Plantas.ElementAt(i).NombrePlanta
+                                @Html.DisplayFor(m => m.Plantas[i].NombrePlanta)
+                                @Html.HiddenFor(m => m.Plantas[i].IdPlanta)
                             </td>
-
                             <td>
                                 @for (int j = 0; j < @Model.Categorias.Count; j++)
                                 {
-                                    @if (@Model.Categorias.ElementAt(j).IdCategoria == @Model.Plantas.ElementAt(i).IdCategoria)
+                                    @Html.HiddenFor(m => m.Categorias[j].IdCategoria)
+                                    @if (Model.Plantas.ElementAt(i).IdCategoria == Model.Categorias.ElementAt(j).IdCategoria)
                                     {
-                                        <input asp-for="@Model.Categorias.ElementAt(j).NombreCategoria" class="form-control" type="hidden" />
-                                        <input asp-for="@Model.Categorias.ElementAt(j).IdCategoria" class="form-control" type="hidden" />
-                                        @Model.Categorias.ElementAt(j).NombreCategoria;
-
-
-                                        j = @Model.Categorias.Count;
+                                        @Html.DisplayFor(m => m.Categorias[j].NombreCategoria)
                                     }
+
                                 }
-
                             </td>
-
-
                             <td>
-        
-
+                                
+                                @Html.CheckBoxFor(m => m.Plantas[i].SeleccionadaParaCambioDeCategoria)
                             </td>
-
-
                         </tr>
-
-
-
-                    </tbody>
-                }
-            }
-        </table>
-
-   
-    <div class="form-group">
-    @Html.DropDownListFor(x => Model.CategoriaSeleccionada.IdCategoria, new SelectList(Model.Categorias, "IdCategoria", "NombreCategoria", Model.CategoriaSeleccionada.NombreCategoria))
-
+                    }
+                </tbody>
+            </table>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
     </div>
+</div>
 
-    <div class="form-control">
-    <Input type="submit" value="Elegir Categoria y plantas">
-      </div>
-</form>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
 

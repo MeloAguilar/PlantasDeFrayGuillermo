@@ -12,7 +12,8 @@
         
         @Html.DropDownListFor(x => Model.CategoriaSeleccionada.IdCategoria, new SelectList(@Model.ListaCategorias, "IdCategoria", "NombreCategoria", Model.CategoriaSeleccionada))
         
-        <Input type="submit" value="Elegir Categoria">
+        <Input type="submit" value="Elegir Categoria" class="btn btn-primary">
+
 
     </div>
     
@@ -37,11 +38,12 @@
                     {
                         <tr>
                             <td>
-                                @item.NombrePlanta
+                                @Html.DisplayFor( m => item.NombrePlanta)
+
                             </td>
 
                             <td>
-                                @item.Precio €
+                                @Html.DisplayFor(m => item.Precio) €
                             </td>
 
 
@@ -59,7 +61,8 @@
     </div>
     </form>
 <div>
-    <h6>¿Desea modificar las plantas de alguna categoría?</h6>
-    <p>@Html.ActionLink("Modificar plantas de las categorias", "CambioDeCategoria", "Home") </p>
+           
+        @Html.ActionLink("Añadir o eliminar plantas de una Categoría", "CambioDeCategoria")
+
 </div>
 
