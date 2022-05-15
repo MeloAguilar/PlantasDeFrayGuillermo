@@ -9,14 +9,19 @@
 <form method="post">
     <div class="row-col-md-11">
 
-        
         @Html.DropDownListFor(x => Model.CategoriaSeleccionada.IdCategoria, new SelectList(@Model.ListaCategorias, "IdCategoria", "NombreCategoria", Model.CategoriaSeleccionada))
-        
-        <Input type="submit" value="Elegir Categoria" class="btn btn-primary">
+        <Input type="submit" value="Mostrar Plantas de Categoría" class="btn btn-primary">
 
 
     </div>
-    
+    @if (@Model.CategoriaSeleccionada.IdCategoria > 0 || @Model.CategoriaSeleccionada.IdCategoria == null)
+    {
+        <div>
+            @Html.ActionLink("Modificar Categoría", "CambioDeCategoria", new { idCategoria = @Model.CategoriaSeleccionada.IdCategoria})
+
+        </div>
+    }
+
     <div>
         @if (@Model.ListaPlantasDeCategoriaSeleccionada.Count > 0)
         {
@@ -59,10 +64,6 @@
 
         }
     </div>
-    </form>
-<div>
-           
-        @Html.ActionLink("Añadir o eliminar plantas de una Categoría", "CambioDeCategoria")
 
-</div>
+</form>
 

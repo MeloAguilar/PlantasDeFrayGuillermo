@@ -5,32 +5,40 @@
     ViewData["Title"] = "CambioDeCategoria";
 }
 
-<h1>CambioDeCategoria</h1>
+
 @if (ViewBag.Error != null)
 {
     <h4>@ViewBag.Error</h4>
 }
-else if(@ViewBag.Exito != null)
+else if (@ViewBag.Exito != null)
 {
-    <h4>@ViewBag.Exito</h4>
+    <h3>@ViewBag.Exito</h3>
+}
+else
+{
+    <h6>
+        Selecciona una Categoría y una o varias Plantas que añadir a dicha Categoría.
+        Después, presiona aceptar
+    </h6>
 }
 
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-10">
         <form asp-action="CambioDeCategoria">
-            <div>
-                @Html.DropDownListFor(x => Model.CategoriaSeleccionada.IdCategoria, new SelectList(@Model.Categorias, "IdCategoria", "NombreCategoria", Model.CategoriaSeleccionada.NombreCategoria))
 
-            </div>
+                           <div>
+                    @Html.DropDownListFor(x => Model.CategoriaSeleccionada.IdCategoria, new SelectList(@Model.Categorias, "IdCategoria", "NombreCategoria", Model.CategoriaSeleccionada.NombreCategoria))
+
+                </div>
             <table class="table">
                 <thead>
                     <tr>
                         <td>
-                            @Html.DisplayNameFor(m => m.CategoriaSeleccionada.IdCategoria)
+                            @Html.DisplayName("Planta")
                         </td>
                         <td>
-                            @Html.DisplayNameFor(m => m.Plantas.ElementAt(1).IdPlanta)
+                            @Html.DisplayName("Categoría")
                         </td>
                     </tr>
 
@@ -42,11 +50,14 @@ else if(@ViewBag.Exito != null)
                             <td>
                                 @Html.DisplayFor(m => m.Plantas[i].NombrePlanta)
                                 @Html.HiddenFor(m => m.Plantas[i].IdPlanta)
+                                @Html.HiddenFor(m => m.Plantas[i].IdCategoria)
+                                @Html.HiddenFor(m => m.Plantas[i].NombrePlanta)
                             </td>
                             <td>
                                 @for (int j = 0; j < @Model.Categorias.Count; j++)
                                 {
                                     @Html.HiddenFor(m => m.Categorias[j].IdCategoria)
+                                    @Html.HiddenFor(m => m.Categorias[j].NombreCategoria)
                                     @if (Model.Plantas.ElementAt(i).IdCategoria == Model.Categorias.ElementAt(j).IdCategoria)
                                     {
                                         @Html.DisplayFor(m => m.Categorias[j].NombreCategoria)
@@ -55,7 +66,6 @@ else if(@ViewBag.Exito != null)
                                 }
                             </td>
                             <td>
-                                
                                 @Html.CheckBoxFor(m => m.Plantas[i].SeleccionadaParaCambioDeCategoria)
                             </td>
                         </tr>
@@ -63,14 +73,10 @@ else if(@ViewBag.Exito != null)
                 </tbody>
             </table>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Aceptar" class="btn btn-primary" />
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 

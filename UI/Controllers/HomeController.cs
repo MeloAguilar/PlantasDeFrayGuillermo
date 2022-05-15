@@ -116,12 +116,19 @@ namespace UI.Controllers
         }
 
 
-        public IActionResult CambioDeCategoria()
+        public IActionResult CambioDeCategoria(int idCategoria)
         {
             cambioDeCategoriaVM = new CambioDeCategoriaVM();
             cambioDeCategoriaVM.Plantas = listasBl.RecogerListadoCompletoPlantasBL();
-            cambioDeCategoriaVM.CategoriaSeleccionada = new clsCategoria();
+            cambioDeCategoriaVM.CategoriaSeleccionada = listasBl.RecogerCategoriaBL(idCategoria);
             cambioDeCategoriaVM.Categorias = listasBl.RecogerListadoCategoriasBL();
+            foreach (var item in cambioDeCategoriaVM.Plantas)
+            {
+                if(item.IdCategoria == cambioDeCategoriaVM.CategoriaSeleccionada.IdCategoria)
+                {
+                    item.SeleccionadaParaCambioDeCategoria = true;
+                }
+            }
             
             return View(cambioDeCategoriaVM);
         }
@@ -142,8 +149,6 @@ namespace UI.Controllers
                     idPlanta++;
                     if (vm.Plantas.ElementAt(i).SeleccionadaParaCambioDeCategoria)
                     {
-                        
-
                         filas += gestionBL.ModificarCategoriaDePlantaBL(vm.CategoriaSeleccionada.IdCategoria, idPlanta); 
                     }
                 }
@@ -159,8 +164,7 @@ namespace UI.Controllers
                 ViewBag.Error = "Algo no funciona en la Base de Datos. Intentelo más tarde";
                 return View(vm);
             }
-            vm.Plantas = listasBl.RecogerListadoCompletoPlantasBL();
-            vm.Categorias = listasBl.RecogerListadoCategoriasBL();
+   
             foreach(var item in vm.Plantas)
             {
                 if(item.IdCategoria == vm.CategoriaSeleccionada.IdCategoria)
