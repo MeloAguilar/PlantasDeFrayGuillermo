@@ -1,9 +1,11 @@
-﻿using Entities;
+﻿using BL.Listados;
+using Entities;
 
 namespace UI.Models
 {
     public class CambioDeCategoriaVM
     {
+       
         public List<clsPlanta> Plantas { get; set; }
 
         public List<clsCategoria> Categorias { get; set; }
@@ -13,10 +15,12 @@ namespace UI.Models
 
         public CambioDeCategoriaVM()
         {
-            Plantas = new List<clsPlanta>();
-            Categorias =  new List<clsCategoria>();
+            clsListadosBL bl = new clsListadosBL();
+            Plantas = bl.RecogerListadoCompletoPlantasBL();
+            Categorias = bl.RecogerListadoCategoriasBL();
             CategoriaSeleccionada = new clsCategoria();
         }
     }
+
 
 }

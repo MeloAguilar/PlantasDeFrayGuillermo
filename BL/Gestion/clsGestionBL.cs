@@ -11,8 +11,8 @@ namespace BL.Gestion
 {
     public class clsGestionBL
     {
-        clsGestionPlantas gestionDal = new clsGestionPlantas();
-        clsListadosPlantas listasDal = new clsListadosPlantas();
+       private clsGestionPlantas gestionDal = new clsGestionPlantas();
+       private clsListadosPlantas listasDal = new clsListadosPlantas();
 
 
         /// <summary>

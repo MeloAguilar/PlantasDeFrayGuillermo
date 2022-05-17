@@ -14,13 +14,13 @@
 
 
     </div>
-    @if (@Model.CategoriaSeleccionada.IdCategoria > 0 || @Model.CategoriaSeleccionada.IdCategoria == null)
-    {
-        <div>
-            @Html.ActionLink("Modificar Categoría", "CambioDeCategoria", new { idCategoria = @Model.CategoriaSeleccionada.IdCategoria})
 
-        </div>
-    }
+
+    <div>
+        @Html.ActionLink("Modificar Categoría", "CambioDeCategoria")
+
+    </div>
+
 
     <div>
         @if (@Model.ListaPlantasDeCategoriaSeleccionada.Count > 0)
@@ -59,9 +59,14 @@
                         </tr>
 
                     }
+
                 </tbody>
             </table>
 
+        }
+        else
+        {
+            ViewBag.Error = "No se ha seleccionado ninguna Categoría";
         }
     </div>
 

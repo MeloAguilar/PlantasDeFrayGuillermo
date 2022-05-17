@@ -30,7 +30,7 @@ namespace DAL.Gestion
         /// <returns>int referente al número de filas afectadas en la base de datos</returns>
         public int EstablecerPrecioPlanta(int idPlanta, double precio)
         {
-            int columnasAfectadas;
+            int filasAfectadas;
             SqlConnection cnn = null;
             try
             {
@@ -40,7 +40,7 @@ namespace DAL.Gestion
                 miComando.Parameters.AddWithValue("@IdPlanta", idPlanta);
                 miComando.Parameters.AddWithValue("@precio", precio);
                 miComando.CommandText = "Update plantas set precio = @precio Where idPlanta = @IdPlanta";
-                columnasAfectadas = miComando.ExecuteNonQuery();
+                filasAfectadas = miComando.ExecuteNonQuery();
 
             }
             catch (Exception e)
@@ -52,11 +52,11 @@ namespace DAL.Gestion
                 if (cnn != null)
                     miConexion.closeConnection(ref cnn);
             }
-            return columnasAfectadas;
+            return filasAfectadas;
         }
         public int ModificarCategoriaDePlanta(int idCategoria, int idPlanta)
         {
-            int columnasAfectadas;
+            int filasAfectadas;
             SqlConnection cnn = null;
             try
             {
@@ -66,7 +66,7 @@ namespace DAL.Gestion
                 miComando.Parameters.AddWithValue("@IdPlanta", idPlanta);
                 miComando.Parameters.AddWithValue("@IdCategoria",idCategoria);
                 miComando.CommandText = "Update plantas set idCategoria = @IdCategoria Where idPlanta = @IdPlanta";
-                columnasAfectadas = miComando.ExecuteNonQuery();
+                filasAfectadas = miComando.ExecuteNonQuery();
 
             }
             catch (Exception e)
@@ -78,7 +78,7 @@ namespace DAL.Gestion
                 if (cnn != null)
                     miConexion.closeConnection(ref cnn);
             }
-            return columnasAfectadas;
+            return filasAfectadas;
         }
     }
 

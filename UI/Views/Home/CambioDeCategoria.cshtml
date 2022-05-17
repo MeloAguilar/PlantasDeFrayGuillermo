@@ -28,7 +28,7 @@ else
         <form asp-action="CambioDeCategoria">
 
                            <div>
-                    @Html.DropDownListFor(x => Model.CategoriaSeleccionada.IdCategoria, new SelectList(@Model.Categorias, "IdCategoria", "NombreCategoria", Model.CategoriaSeleccionada.NombreCategoria))
+                    @Html.DropDownListFor(x => Model.CategoriaSeleccionada.IdCategoria, new SelectList(@Model.Categorias, "IdCategoria", "NombreCategoria", Model.CategoriaSeleccionada.NombreCategoria), new{name="idCategoria"})
 
                 </div>
             <table class="table">
@@ -50,14 +50,12 @@ else
                             <td>
                                 @Html.DisplayFor(m => m.Plantas[i].NombrePlanta)
                                 @Html.HiddenFor(m => m.Plantas[i].IdPlanta)
-                                @Html.HiddenFor(m => m.Plantas[i].IdCategoria)
-                                @Html.HiddenFor(m => m.Plantas[i].NombrePlanta)
+     
                             </td>
                             <td>
                                 @for (int j = 0; j < @Model.Categorias.Count; j++)
                                 {
                                     @Html.HiddenFor(m => m.Categorias[j].IdCategoria)
-                                    @Html.HiddenFor(m => m.Categorias[j].NombreCategoria)
                                     @if (Model.Plantas.ElementAt(i).IdCategoria == Model.Categorias.ElementAt(j).IdCategoria)
                                     {
                                         @Html.DisplayFor(m => m.Categorias[j].NombreCategoria)

@@ -20,7 +20,6 @@ namespace UI.Controllers
         public HomeController(ILogger<HomeController> logger)
         {
             cambioDeCategoriaVM = new CambioDeCategoriaVM();
-            indexVM.ListaCategorias = listasBl.RecogerListadoCategoriasBL();
             _logger = logger;
         }
 
@@ -86,22 +85,21 @@ namespace UI.Controllers
         public IActionResult PonerPrecio(clsPlanta planta)
         {
             //Esto
-            int exito;
+            int filasAfectadas;
             try
             {
                 //No se como hacerlo de forma más profesional
-                exito = gestionBL.EstablecerPrecioPlantaBL(planta.IdPlanta, planta.Precio);
+                filasAfectadas = gestionBL.EstablecerPrecioPlantaBL(planta.IdPlanta, planta.Precio);
 
-                if (exito == 0)
+                if (filasAfectadas == 0)
                 {
                     ViewBag.Error = "No se encontró ninguna planta con estos datos";
-                    return View(planta);
+                    
                 }
-                else if (exito == 1)
+                else if (filasAfectadas == 1)
                 {
-                    planta = listasBl.RecogerPlantaBL(planta.IdPlanta);
                     ViewBag.Exito = "Se estableció con éxito el precio de la planta";
-                    return View(planta);
+                    
                 }
             }
             catch (Exception e)
@@ -109,27 +107,16 @@ namespace UI.Controllers
 
                 ViewBag.Error = "Algo no funciona en la Base de Datos. Intentelo más tarde";
                 //Preguntar como hacer errores propios para que quede claro que es lo que ha fallado
-                return View(planta);
+                
             }
 
             return View(planta);
         }
 
 
-        public IActionResult CambioDeCategoria(int idCategoria)
+        public IActionResult CambioDeCategoria()
         {
-            cambioDeCategoriaVM = new CambioDeCategoriaVM();
-            cambioDeCategoriaVM.Plantas = listasBl.RecogerListadoCompletoPlantasBL();
-            cambioDeCategoriaVM.CategoriaSeleccionada = listasBl.RecogerCategoriaBL(idCategoria);
-            cambioDeCategoriaVM.Categorias = listasBl.RecogerListadoCategoriasBL();
-            foreach (var item in cambioDeCategoriaVM.Plantas)
-            {
-                if(item.IdCategoria == cambioDeCategoriaVM.CategoriaSeleccionada.IdCategoria)
-                {
-                    item.SeleccionadaParaCambioDeCategoria = true;
-                }
-            }
-            
+            cambioDeCategoriaVM = new CambioDeCategoriaVM();      
             return View(cambioDeCategoriaVM);
         }
 
@@ -146,9 +133,10 @@ namespace UI.Controllers
 
                 for (int i = 0; i < vm.Plantas.Count; i++)
                 {
-                    idPlanta++;
+                    
                     if (vm.Plantas.ElementAt(i).SeleccionadaParaCambioDeCategoria)
                     {
+                        idPlanta = vm.Plantas.ElementAt(i).IdPlanta;
                         filas += gestionBL.ModificarCategoriaDePlantaBL(vm.CategoriaSeleccionada.IdCategoria, idPlanta); 
                     }
                 }
@@ -162,7 +150,7 @@ namespace UI.Controllers
             catch (Exception e)
             {
                 ViewBag.Error = "Algo no funciona en la Base de Datos. Intentelo más tarde";
-                return View(vm);
+                return View(new CambioDeCategoriaVM());
             }
    
             foreach(var item in vm.Plantas)
@@ -172,7 +160,9 @@ namespace UI.Controllers
                     item.SeleccionadaParaCambioDeCategoria = true;
                 }
             }
-            return View(vm);
+            CambioDeCategoriaVM cDMVM = new CambioDeCategoriaVM();
+            cDMVM.CategoriaSeleccionada = (vm.CategoriaSeleccionada);
+            return View(cDMVM);
         }
 
 
