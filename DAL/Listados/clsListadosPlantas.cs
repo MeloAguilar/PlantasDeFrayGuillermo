@@ -273,10 +273,10 @@ namespace DAL.Listados
         {
             conn = miConexion.getConnection();
             cmd.Connection= conn;
-            cmd.Parameters.AddWithValue("@idPlanta", id);
-            cmd.CommandText = "Select * From plantas Where idPlanta = @idPlanta ";
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.CommandText = "Select * From plantas Where idPlanta = @id";
             reader = cmd.ExecuteReader();
-            while(reader.Read())
+            
             p = GenerarPlanta(reader);
         }
         catch (Exception e)

@@ -6,7 +6,7 @@
  * btnSaludar y llama a la funcion saludar si este es clicado
  * */
 function inicializaEventos() {
-    document.getElementById("btnSaludar").addEventListener("click", saludar, false);
+    document.getElementById("tablaPlantas").addEventListener("load", saludar, false);
 }
 /**
  * funcion que abre un alert que nos saluda
@@ -18,7 +18,9 @@ function inicializaEventos() {
  * 
  * 
  * */
-function saludar()
+function mostrarPlantas()
 {
-    alert("Hola desde el archivo de JavaScript");
+    var llamada = new XMLHttpRequest();
+
+    llamada.open("GET", "https://localhost/api/Plantas");
 }
