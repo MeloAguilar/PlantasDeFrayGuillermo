@@ -1,4 +1,4 @@
-﻿@model UI.Models.CambioDeCategoriaVM
+﻿@model UI.Models.ViewModels.CambioDeCategoriaVM
 @using Entities
 
 @{
@@ -64,7 +64,7 @@ else
                                 }
                             </td>
                             <td>
-                                @Html.CheckBoxFor(m => m.Plantas[i].SeleccionadaParaCambioDeCategoria)
+                                @Html.CheckBoxFor(m => (bool)m.Plantas[i].SeleccionadaParaCambioDeCategoria)
                             </td>
                         </tr>
                     }

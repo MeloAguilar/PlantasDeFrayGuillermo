@@ -1,13 +1,13 @@
 ﻿using BL.Listados;
 using Entities;
 
-namespace UI.Models
+namespace UI.Models.ViewModels
 {
     public class IndexVM
     {
         public List<clsPlanta> ListaPlantasDeCategoriaSeleccionada { get; set; }
 
-        public List<clsCategoria> ListaCategorias { get;}
+        public List<clsCategoria> ListaCategorias { get; }
         public clsCategoria CategoriaSeleccionada { get; set; }
 
 

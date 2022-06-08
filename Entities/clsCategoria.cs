@@ -11,6 +11,9 @@ namespace Entities
         public int IdCategoria { get; set; }
         public string NombreCategoria { get; set; }
 
+        public clsCategoria()
+        {
 
+        }
     }
 }

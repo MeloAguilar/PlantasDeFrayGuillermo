@@ -18,6 +18,8 @@ namespace BL.Listados
         {
             return dal.RecogerListadoCompletoPlantas();
         }
+
+
         public List<clsCategoria> RecogerListadoCategoriasBL()
         {
             return dal.RecogerListadoCompletoCategorias();

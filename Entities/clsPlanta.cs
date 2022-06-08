@@ -19,7 +19,7 @@ namespace Entities
         public double Precio { get; set; }
 
 
-        public bool SeleccionadaParaCambioDeCategoria { get; set; }
+       
 
 
         public clsPlanta()

@@ -42,7 +42,7 @@ namespace DAL.Listados
                 {
                     c.IdCategoria = (int)reader["idCategoria"];
                     if (reader["nombreCategoria"] != DBNull.Value)
-                    c.NombreCategoria = (string)reader["nombreCategoria"];
+                        c.NombreCategoria = (string)reader["nombreCategoria"];
 
                 }
             }
@@ -187,157 +187,160 @@ namespace DAL.Listados
                     plantas.Add(GenerarPlanta(reader));
 
                 }
-                
+
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw e;
             }
             return plantas;
-    }
+        }
 
-    /// <summary>
-    /// List-clsCategoria RecogerListadoCompletoCategorias()
-    /// 
-    /// Método que se encarga de rescatar una lista de Categorias de plantas de la Base de Datos
-    /// 
-    /// <preconditions>
-    /// Ninguna
-    /// </preconditions>
-    /// <postconditions>
-    /// En caso de que la base de datos no falle,
-    /// devolvera el listado completo de categorias 
-    /// que se encuentran en la base de datos FrayGuillermo
-    /// </postconditions>
-    /// </summary>
-    /// <returns name="categorias"> List clsCategoria</returns>
-    public List<clsCategoria> RecogerListadoCompletoCategorias()
-    {
-        List<clsCategoria> categorias = new List<clsCategoria>();
-
-        SqlCommand cmd = new SqlCommand();
-        SqlConnection conn = new SqlConnection();
-        SqlDataReader reader = null;
-        try
+        /// <summary>
+        /// List-clsCategoria RecogerListadoCompletoCategorias()
+        /// 
+        /// Método que se encarga de rescatar una lista de Categorias de plantas de la Base de Datos
+        /// 
+        /// <preconditions>
+        /// Ninguna
+        /// </preconditions>
+        /// <postconditions>
+        /// En caso de que la base de datos no falle,
+        /// devolvera el listado completo de categorias 
+        /// que se encuentran en la base de datos FrayGuillermo
+        /// </postconditions>
+        /// </summary>
+        /// <returns name="categorias"> List clsCategoria</returns>
+        public List<clsCategoria> RecogerListadoCompletoCategorias()
         {
-            conn = miConexion.getConnection();
-            cmd.Connection = conn;
+            List<clsCategoria> categorias = new List<clsCategoria>();
 
-            cmd.CommandText = "Select * From categorias";
-            reader = cmd.ExecuteReader();
-            while (reader.Read())
+            SqlCommand cmd = new SqlCommand();
+            SqlConnection conn = new SqlConnection();
+            SqlDataReader reader = null;
+            try
             {
-                categorias.Add(GenerarCategoria(reader));
+                conn = miConexion.getConnection();
+                cmd.Connection = conn;
+
+                cmd.CommandText = "Select * From categorias";
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    categorias.Add(GenerarCategoria(reader));
+
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                //Por asegurarme 
+                if (conn != null)
+                    miConexion.closeConnection(ref conn);
+                if (reader != null)
+                    reader.Close();
+            }
+
+
+            return categorias;
+        }
+
+
+        /// <summary>
+        /// clsPlanta RecogerPlanta(int id)
+        /// 
+        /// Método encargado de extraer un objeto clsPlanta de una base de datos
+        /// a partir de un enter
+        /// <preconditions>
+        /// id debe coincidi
+        /// </preconditions>
+        /// <postconditions>
+        /// 
+        /// </postconditions>
+        /// </summary>
+        /// <param name="id">id de un objeto clsPlanta</param>
+        /// <returns>clsPlanta p</returns>
+        public clsPlanta RecogerPlanta(int id)
+        {
+            clsPlanta p = new clsPlanta();
+            SqlCommand cmd = new SqlCommand();
+            SqlDataReader reader = null;
+            SqlConnection conn = null;
+            try
+            {
+                conn = miConexion.getConnection();
+                cmd.Connection= conn;
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.CommandText = "Select * From plantas Where idPlanta = @id";
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    p = GenerarPlanta(reader);
+                }
 
             }
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
-        finally
-        {
-            //Por asegurarme 
-            if (conn != null)
-                miConexion.closeConnection(ref conn);
-            if (reader != null)
-                reader.Close();
-        }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                if (reader != null)
+                    reader.Close();
+
+                if (conn != null)
+                    miConexion.closeConnection(ref conn);
+            }
 
 
-        return categorias;
-    }
 
-
-    /// <summary>
-    /// clsPlanta RecogerPlanta(int id)
-    /// 
-    /// Método encargado de extraer un objeto clsPlanta de una base de datos
-    /// a partir de un enter
-    /// <preconditions>
-    /// id debe coincidi
-    /// </preconditions>
-    /// <postconditions>
-    /// 
-    /// </postconditions>
-    /// </summary>
-    /// <param name="id">id de un objeto clsPlanta</param>
-    /// <returns>clsPlanta p</returns>
-    public clsPlanta RecogerPlanta(int id)
-    {
-        clsPlanta p = new clsPlanta();
-        SqlCommand cmd = new SqlCommand();
-        SqlDataReader reader = null;
-        SqlConnection conn = null;
-        try
-        {
-            conn = miConexion.getConnection();
-            cmd.Connection= conn;
-            cmd.Parameters.AddWithValue("@id", id);
-            cmd.CommandText = "Select * From plantas Where idPlanta = @id";
-            reader = cmd.ExecuteReader();
-            
-            p = GenerarPlanta(reader);
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
-        finally
-        {
-            if (reader != null)
-                reader.Close();
-
-            if (conn != null)
-                miConexion.closeConnection(ref conn);
+            return p;
         }
 
-
-
-        return p;
-    }
-
-    /// <summary>
-    /// clsCategoria RecogerCategoria(int id)
-    /// 
-    /// Método que se encarga de rescatar un objeto de tipo 
-    /// clsCategoria de la Base de Datos
-    /// </summary>
-    /// <param name="id"> id de un objeto clsCategoria</param>
-    /// <returns>clsCategoria c</returns>
-    public clsCategoria RecogerCategoria(int id)
-    {
-        SqlCommand cmd = new SqlCommand();
-        clsCategoria c = new clsCategoria();
-        SqlConnection conn = null;
-        SqlDataReader reader = null;
-        try
+        /// <summary>
+        /// clsCategoria RecogerCategoria(int id)
+        /// 
+        /// Método que se encarga de rescatar un objeto de tipo 
+        /// clsCategoria de la Base de Datos
+        /// </summary>
+        /// <param name="id"> id de un objeto clsCategoria</param>
+        /// <returns>clsCategoria c</returns>
+        public clsCategoria RecogerCategoria(int id)
         {
-            conn = miConexion.getConnection();
-            cmd.Connection = conn;
+            SqlCommand cmd = new SqlCommand();
+            clsCategoria c = new clsCategoria();
+            SqlConnection conn = null;
+            SqlDataReader reader = null;
+            try
+            {
+                conn = miConexion.getConnection();
+                cmd.Connection = conn;
 
-            cmd.Parameters.AddWithValue("@idCategoria", id);
-            cmd.CommandText = "Select * From categorias Where idCategoria = @idCategoria";
-            reader = cmd.ExecuteReader();
-                while (reader.Read()) 
+                cmd.Parameters.AddWithValue("@idCategoria", id);
+                cmd.CommandText = "Select * From categorias Where idCategoria = @idCategoria";
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    c = GenerarCategoria(reader); 
+                    c = GenerarCategoria(reader);
                 }
-            
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
-        finally
-        {
-            if (conn != null)
-                conn.Close();
-            if (reader != null)
-                reader.Close();
-        }
 
-        return c;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                if (conn != null)
+                    conn.Close();
+                if (reader != null)
+                    reader.Close();
+            }
+
+            return c;
+        }
     }
-}
 }

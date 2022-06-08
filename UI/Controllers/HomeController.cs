@@ -3,7 +3,7 @@ using BL.Listados;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using UI.Models;
+using UI.Models.ViewModels;
 
 namespace UI.Controllers
 {
@@ -134,7 +134,7 @@ namespace UI.Controllers
                 for (int i = 0; i < vm.Plantas.Count; i++)
                 {
                     
-                    if (vm.Plantas.ElementAt(i).SeleccionadaParaCambioDeCategoria)
+                    if ((bool)vm.Plantas.ElementAt(i).SeleccionadaParaCambioDeCategoria)
                     {
                         idPlanta = vm.Plantas.ElementAt(i).IdPlanta;
                         filas += gestionBL.ModificarCategoriaDePlantaBL(vm.CategoriaSeleccionada.IdCategoria, idPlanta); 
