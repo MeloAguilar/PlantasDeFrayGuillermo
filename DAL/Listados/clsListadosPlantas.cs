@@ -13,7 +13,7 @@ namespace DAL.Listados
 
     public class clsListadosPlantas
     {
-        clsMyConnection miConexion = new clsMyConnection();
+       private clsMyConnection miConexion = new clsMyConnection();
 
 
         /// <summary>

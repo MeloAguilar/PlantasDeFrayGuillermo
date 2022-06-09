@@ -19,8 +19,8 @@ namespace DAL.Conexion
 
         public clsMyConnection()
         {
-            //107-12\\SQLEXPRESS
-            this.server = "localhost";
+            //localhost
+            this.server = "107-12\\SQLEXPRESS";
             
             this.dataBase = "FrayGuillermo";
             
