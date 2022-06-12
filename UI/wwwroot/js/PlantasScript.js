@@ -263,6 +263,9 @@ function cambiarCategoriaPlanta(jsonPlantas) {
     for (var i = 0; i < jsonPlantas.length; i++) {
 
         var check = document.getElementById("checkbox" + jsonPlantas[i].idPlanta);
+        var select = document.getElementById("selectacion");
+        var opcionSeleccionada = select.options[select.selectedIndex];
+        check.value = opcionSeleccionada.value;
         if (check.checked) {
             var numCat = parseInt(check.value);
             var planta = new clsPlanta();
@@ -298,7 +301,7 @@ function PutPlanta(planta) {
 
     llamada.open("PUT", "http://localhost:5027/api/Plantas/" + planta.idPlanta);
     var json = JSON.stringify(planta);
-    llamada.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+    llamada.setRequestHeader('Content-type', 'text/json; charset=utf-8');
     llamada.onreadystatechange = function () {
         if (llamada.readyState == 4 && llamada.status == 200) {
             alert(json);
