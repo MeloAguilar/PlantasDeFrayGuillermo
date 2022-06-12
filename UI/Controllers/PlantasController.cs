@@ -29,7 +29,7 @@ namespace apiDeFrayGuillermo.Controllers
             }
             catch (System.Web.Http.HttpResponseException e)
             {
-                 BadRequest();
+                result = BadRequest();
             }
             if (plantas == null || plantas.Count() == 0)
             {
@@ -39,7 +39,7 @@ namespace apiDeFrayGuillermo.Controllers
             {
                 result = Ok(plantas);
             }
-            
+
             return result;
         }
 
@@ -79,8 +79,28 @@ namespace apiDeFrayGuillermo.Controllers
 
         // PUT api/<PlantasController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put(int id, [FromBody]clsPlanta planta)
         {
+            IActionResult result = null;
+            int filasAfectadas = 0;
+            try
+            {
+                filasAfectadas = gestion.ModificarCategoriaDePlantaBL(planta.IdCategoria, id);
+            }
+            catch (System.Web.Http.HttpResponseException e)
+            {
+                result = BadRequest();
+            }
+            if (filasAfectadas == 0)
+            {
+                result=NoContent();
+            }
+            else
+            {
+                result = Ok();
+            }
+
+            return result;
         }
 
         // DELETE api/<PlantasController>/5
