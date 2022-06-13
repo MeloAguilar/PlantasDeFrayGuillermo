@@ -11,14 +11,26 @@ class clsPlanta {
     }
 }
 
+class clsCategoria {
+    constructor(idCategoria, nombreCategoria) {
+        idCategoria: idCategoria;
+        nombreCategoria: nombreCategoria;
+
+    }
+}
+
 /**
  * funcion que comprueba el estado del boton
  * btnSaludar y llama a la funcion mostrar si este es clicado
  * */
 function inicializaEventos() {
-    mostrar();
+    
+    document.onchange = mostrar();
+    //documen.getElementById("tabla").addEventListener("load", mostrar, true);
     document.getElementById("btnAceptar").addEventListener("click", recogerDatosChecks, true);
-    document.getElementById("crear").addEventListener("click", crear)
+
+
+
 }
 
 
@@ -37,17 +49,16 @@ function inicializaEventos() {
 function mostrar() {
     var llamada2 = new XMLHttpRequest();
 
-    llamada2.open("GET", "http://localhost:5027/api/Categorias", false);
+    llamada2.open("GET", "http://localhost:5027/api/Categorias", true);
     var llamada = new XMLHttpRequest();
-    llamada.open("GET", "http://localhost:5027/api/Plantas", false);
+    llamada.open("GET", "http://localhost:5027/api/Plantas", true);
     var arrayCat;
     llamada2.onreadystatechange = function () {
         if (llamada2.readyState < 4) {
-            const imagen = document.createElement("img");
-            imagen.src = "../img/carga1.png";
-            document.getElementById("imagen").appendChild(imagen);
+
         }
         else if ((llamada2.readyState == 4 && llamada2.status == 200)) {
+
             arrayCat = JSON.parse(llamada2.responseText);
             rellenarSelectCategorias(arrayCat);
 
@@ -60,9 +71,7 @@ function mostrar() {
     llamada.onreadystatechange = function () {
         var listaPlantas;
         if (llamada.readyState < 4) {
-            const imagen = document.createElement("img");
-            imagen.src = "../img/carga1.png";
-            document.getElementById("imagen").appendChild(imagen);
+
         }
         else if ((llamada.readyState == 4 && llamada.status == 200)) {
             var jsonPlantas = JSON.parse(llamada.responseText);
@@ -130,10 +139,14 @@ function rellenarSelectCategorias(arrayCat) {
  */
 function rellenarPlantas(jsonPlantas, jsonCat) {
     var numCheck = 1;
-    var tabla = document.getElementById("tbody");
+    var cuerpoTabla = document.createElement("tbody");
+    var tabla = document.getElementById("tabla");
+    tabla.appendChild(cuerpoTabla);
     for (var i = 0; i < jsonPlantas.length; i++) {
         var fila = document.createElement("tr");
+        fila.id = jsonPlantas[i].idPlanta;
         var columna = document.createElement("td");
+
         var textoColumna = document.createTextNode(jsonPlantas[i].nombrePlanta);
         columna.appendChild(textoColumna);
         fila.append(columna);
@@ -167,7 +180,7 @@ function rellenarPlantas(jsonPlantas, jsonCat) {
         columna4.appendChild(check);
         fila.appendChild(columna4);
 
-        tabla.appendChild(fila);
+        cuerpoTabla.appendChild(fila);
         numCheck++;
     }
 
@@ -195,6 +208,7 @@ function rellenarPlantas(jsonPlantas, jsonCat) {
  */
 function elegirCategoria(jsonCat, idCategoriaPlanta, fila) {
     var textocolumna;
+    var categoria;
     var salir = false;
     for (var j = 0; j < jsonCat.length && !salir; j++) {
         if (idCategoriaPlanta == jsonCat[j].idCategoria) {
@@ -202,10 +216,14 @@ function elegirCategoria(jsonCat, idCategoriaPlanta, fila) {
             textocolumna = document.createTextNode(jsonCat[j].nombreCategoria);
             columna1.appendChild(textocolumna);
             fila.append(columna1);
+            categoria = jsonCat[j];
             salir = true;
         }
     }
+    return categoria;
 }
+
+
 
 
 
@@ -229,7 +247,6 @@ function elegirCategoria(jsonCat, idCategoriaPlanta, fila) {
 function recogerDatosChecks() {
     var llamada = new XMLHttpRequest();
     llamada.open("GET", "http://localhost:5027/api/Plantas", true);
-
     llamada.onreadystatechange = function () {
         if (llamada.readyState < 4) {
 
@@ -274,6 +291,7 @@ function cambiarCategoriaPlanta(jsonPlantas) {
             planta.descripcion = jsonPlantas[i].descripcion;
             planta.idCategoria = numCat;
             planta.precio = jsonPlantas[i].precio;
+            check.checked = false;
             PutPlanta(planta);
         }
     }
@@ -304,22 +322,74 @@ function PutPlanta(planta) {
     llamada.setRequestHeader('Content-type', 'text/json; charset=utf-8');
     llamada.onreadystatechange = function () {
         if (llamada.readyState == 4 && llamada.status == 200) {
-            alert(json);
+           
         } else {
-            alert(json);
+
         }
     };
 
     llamada.send(json);
-
+ var tabla = document.getElementById("tblody");
+            modificarTablaTrasPut();
 }
 
 
 
 
+/**
+ * <header> modificarTablaTrasPut() </header>
+ * 
+ * <summary>
+ * Método que se encarga de recargar la planta seleccionada para el cambio
+ * dejando el check unchecked y su nueva categoría junto a esta
+ * </summary>
+ * 
+ * <pre></pre>
+ * 
+ * <post></post<
+ */
+function modificarTablaTrasPut() {
+
+    var body = document.getElementById("tbody");
+
+    body.remove();
+
+}
+
+/**
+ * 
+ * 
+ * 
+ * */
+/**
+ * <header> generarCheckBox() </header>
+ * 
+ * <summary>Procedimiento que crea un elemento html input checkbox 
+ * y le da el valor del value del select con id "selectacion"
+ * </summary>
+ * 
+ * <pre>debe existir un select que muestre las categorias llamado "selectacion"</pre>
+ * <post>Siempre devolverá un elemento input checkbox para utilizar</post>
+ * 
+ * 
+ *  @param {string} idCheck
+ * */
+function generarCheckBox(idCheck) {
+
+ 
+    var check = document.createElement("input");
+    check.type = "checkbox";
+    var select = document.getElementById("selectacion");
+    var opcionSeleccionada = select.options[select.selectedIndex];
 
 
+    check.setAttribute("id", idCheck);
+    check.setAttribute("value", opcionSeleccionada.value);
 
+   
+
+    return check;
+}
 
 
 
