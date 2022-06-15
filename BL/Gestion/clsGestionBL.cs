@@ -19,9 +19,6 @@ namespace BL.Gestion
         /// Método que añade políticas de negocio al método de la Capa DAL,
         /// clase clsGestionPlantas: EstablecerPrecioPlanta(int id, double precio) 
         /// 
-        /// Este método se encargará de que el precio de una planta sea 0 antes de establecerlo
-        /// ya que se pedía explicitamente que si el precio estaba ya establecido este debía aparecer
-        /// y no poderse cambiar
         /// </summary>
         /// <param name="id">id de un objeto clsPlanta</param>
         /// <param name="precio">precio de un objeto clsPlanta</param>
@@ -33,9 +30,28 @@ namespace BL.Gestion
             return gestionDal.EstablecerPrecioPlanta(id, precio);
         }
 
+
+        /// <summary>
+        /// Método que añade políticas de negocio al método de la Capa DAL,
+        /// clase clsGestionPlantas: ModificarCategoriaDePlanta(int id, double precio) 
+        /// </summary>
+        /// <param name="idCat"></param>
+        /// <param name="idPlanta"></param>
+        /// <returns></returns>
         public int ModificarCategoriaDePlantaBL(int idCat, int idPlanta)
         {
             return gestionDal.ModificarCategoriaDePlanta(idCat, idPlanta);
+        }
+
+
+        public int CrearPlantaBL(clsPlanta planta)
+        {
+
+            if (planta.Precio < 0)
+            {
+                planta.Precio = 0;
+            }
+            return gestionDal.CrearPlanta(planta);
         }
     }
 }

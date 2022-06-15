@@ -24,8 +24,9 @@ class clsCategoria {
  * btnSaludar y llama a la funcion mostrar si este es clicado
  * */
 function inicializaEventos() {
-    
-    document.onchange = mostrar();
+
+    /* document.onchange = mostrar();*/
+    document.getElementById("tabla").addEventListener("change", mostrar(), true)
     //documen.getElementById("tabla").addEventListener("load", mostrar, true);
     document.getElementById("btnAceptar").addEventListener("click", recogerDatosChecks, true);
 
@@ -87,6 +88,30 @@ function mostrar() {
 }
 
 
+/**
+ * <header> rellenarFilaConTexto(fila,texto)</header>
+ * 
+ * <summary>
+ * Metodo que, dándo como parametros un elemento 'tr'
+ * y un string, genera
+ * </summary>
+ * 
+ * <pre>
+ * el elemento 'tr' fila debe existir en el documento html o crearse previamente.</pre>
+ * <post>siempre creará un elemento 'td', además del nodo de texto, que se convertirá en hijo de
+ * la fila pasada como parámetro
+ * </post>
+  * @param {HtmlTableRowElement} fila
+  * @param {string} texto
+  */
+function rellenarFilaConTexto(fila, texto) {
+    var columna = document.createElement("td");
+
+    var nodoTexto = document.createTextNode(texto);
+
+    columna.appendChild(nodoTexto);
+    fila.appendChild(columna);
+}
 
 
 
@@ -123,6 +148,7 @@ function rellenarSelectCategorias(arrayCat) {
 
 
 
+
 /**
  * <header> rellenarPlantas(jsonPlantas, jsonCat) </header>
  * 
@@ -138,52 +164,35 @@ function rellenarSelectCategorias(arrayCat) {
  * @param {JSON} jsonCat
  */
 function rellenarPlantas(jsonPlantas, jsonCat) {
-    var numCheck = 1;
+
     var cuerpoTabla = document.createElement("tbody");
+
     var tabla = document.getElementById("tabla");
     tabla.appendChild(cuerpoTabla);
+
+
     for (var i = 0; i < jsonPlantas.length; i++) {
         var fila = document.createElement("tr");
         fila.id = jsonPlantas[i].idPlanta;
-        var columna = document.createElement("td");
-
-        var textoColumna = document.createTextNode(jsonPlantas[i].nombrePlanta);
-        columna.appendChild(textoColumna);
-        fila.append(columna);
+        fila.nodeName = jsonPlantas[i].idPlanta;
+        rellenarFilaConTexto(fila, jsonPlantas[i].nombrePlanta);
         elegirCategoria(jsonCat, jsonPlantas[i].idCategoria, fila);
-        var columna3 = document.createElement("td");
         if (jsonPlantas[i].precio != null) {
-            textoColumna = document.createTextNode(jsonPlantas[i].precio);
+            rellenarFilaConTexto(fila, jsonPlantas[i].precio);
         }
         else {
-            textoColumna = document.createTextNode("0");
+            rellenarFilaConTexto(fila, "0");
         }
 
 
 
-        columna3.appendChild(textoColumna);
-        fila.appendChild(columna3);
+        var check = generarCheckBox("checkbox" + jsonPlantas[i].idPlanta);
+        var columnaCheck = document.createElement("td");
+        columnaCheck.appendChild(check);
 
-
-        var columna4 = document.createElement("td");
-        //La forma de crear inputs, ya sea checkbox, radio, button..
-        var check = document.createElement("input");
-        check.type = "checkbox";
-        //Como seleccionar la option de un select y ponerselo como value a un check
-        var select = document.getElementById("selectacion");
-        var opcionSeleccionada = select.options[select.selectedIndex];
-
-        check.setAttribute("id", "checkbox" + numCheck);
-        check.setAttribute("value", opcionSeleccionada.value)
-
-
-        columna4.appendChild(check);
-        fila.appendChild(columna4);
-
+        fila.appendChild(columnaCheck);
         cuerpoTabla.appendChild(fila);
-        numCheck++;
     }
-
 }
 
 
@@ -207,16 +216,12 @@ function rellenarPlantas(jsonPlantas, jsonCat) {
  * @param {document.createElement} fila
  */
 function elegirCategoria(jsonCat, idCategoriaPlanta, fila) {
-    var textocolumna;
     var categoria;
     var salir = false;
-    for (var j = 0; j < jsonCat.length && !salir; j++) {
-        if (idCategoriaPlanta == jsonCat[j].idCategoria) {
-            var columna1 = document.createElement("td");
-            textocolumna = document.createTextNode(jsonCat[j].nombreCategoria);
-            columna1.appendChild(textocolumna);
-            fila.append(columna1);
-            categoria = jsonCat[j];
+    for (var i = 0; i < jsonCat.length && !salir; i++) {
+        if (idCategoriaPlanta == jsonCat[i].idCategoria) {
+            rellenarFilaConTexto(fila, jsonCat[i].nombreCategoria);
+            categoria = jsonCat[i];
             salir = true;
         }
     }
@@ -245,14 +250,16 @@ function elegirCategoria(jsonCat, idCategoriaPlanta, fila) {
  * 
  * */
 function recogerDatosChecks() {
+
     var llamada = new XMLHttpRequest();
     llamada.open("GET", "http://localhost:5027/api/Plantas", true);
     llamada.onreadystatechange = function () {
         if (llamada.readyState < 4) {
 
         } else if (llamada.readyState == 4 && llamada.status == 200) {
+            /*comprobarCheckBoxes();*/
             var jsonPlantas = JSON.parse(llamada.responseText);
-            cambiarCategoriaPlanta(jsonPlantas);
+            cambiarCategoriasVariasPlantas(jsonPlantas);
         }
 
     }
@@ -262,7 +269,29 @@ function recogerDatosChecks() {
 }
 
 
+/**
+ * 
+ * <header>comprobarCheckBoxes()</header>
+ * 
+ * <summary>
+ * Método que modifica el value de todos los checkboxes en base al value seleccionado del select 
+ * 
+ */
+function comprobarCheckBoxes() {
+    var tabla = document.getElementById("tbody");
+    var select = document.getElementById("selectacion");
+    var valorSeleccionado = select.options[select.selectedIndex];
+    
+    try {
+        for (var i = 1; i <= 1000; i++) {
+            var check = document.getElementById("checkbox" + i);
+            check.value = valorSeleccionado.value;
+        }
+        } catch (Exception) {
 
+        }
+    
+}
 /**
  * <header> cambiarCategoriaPlanta(jsonPlantas) </header>
  * 
@@ -276,29 +305,38 @@ function recogerDatosChecks() {
  * <post>nada</post>
  * @param {any} jsonPlantas
  */
-function cambiarCategoriaPlanta(jsonPlantas) {
+function cambiarCategoriasVariasPlantas(jsonPlantas) {
+    var check;
     for (var i = 0; i < jsonPlantas.length; i++) {
-
-        var check = document.getElementById("checkbox" + jsonPlantas[i].idPlanta);
-        var select = document.getElementById("selectacion");
-        var opcionSeleccionada = select.options[select.selectedIndex];
-        check.value = opcionSeleccionada.value;
+        check = document.getElementById("checkbox" + jsonPlantas[i].idPlanta);
         if (check.checked) {
-            var numCat = parseInt(check.value);
-            var planta = new clsPlanta();
-            planta.idPlanta = jsonPlantas[i].idPlanta;
-            planta.nombrePlanta = jsonPlantas[i].nombrePlanta;
-            planta.descripcion = jsonPlantas[i].descripcion;
-            planta.idCategoria = numCat;
-            planta.precio = jsonPlantas[i].precio;
-            check.checked = false;
-            PutPlanta(planta);
+            cambiarCategoriaPlanta(jsonPlantas[i], check);
+
         }
+
     }
 }
 
+/**
+ * <header> cambiarCategoriaPlanta(planta, check)</header>
+ * 
+ * <summary> 
+ * Método que se encarga de cambiar la categoria de una planta
+ * </sumary>
+ * 
+ * <pre></pre>
+ * <post></post>
+ * @param {any} planta
+ */
+function cambiarCategoriaPlanta(planta, check) {
+    comprobarCheckBoxes();
+    var numCat = parseInt(check.value);
+    planta.idCategoria = numCat;
+    check.checked = false;
+    PutPlanta(planta);
 
-
+    modificarTablaTrasPut(planta);
+}
 
 
 /**
@@ -322,15 +360,13 @@ function PutPlanta(planta) {
     llamada.setRequestHeader('Content-type', 'text/json; charset=utf-8');
     llamada.onreadystatechange = function () {
         if (llamada.readyState == 4 && llamada.status == 200) {
-           
-        } else {
+
+        } else if(llamada.readyState < 4){
 
         }
     };
 
     llamada.send(json);
- var tabla = document.getElementById("tblody");
-            modificarTablaTrasPut();
 }
 
 
@@ -348,12 +384,69 @@ function PutPlanta(planta) {
  * 
  * <post></post<
  */
-function modificarTablaTrasPut() {
+function modificarTablaTrasPut(planta) {
 
-    var body = document.getElementById("tbody");
 
-    body.remove();
 
+    var llamada = new XMLHttpRequest();
+    llamada.open("GET", "http://localhost:5027/api/Categorias", true);
+    llamada.onreadystatechange = function () {
+        if (llamada.readyState == 4 && llamada.status == 200) {
+            var jsonCat = JSON.parse(llamada.responseText);
+            
+            generarFila(planta, jsonCat);
+        } else if (llamada.readyState < 4) {
+
+        }
+    };
+    llamada.send();
+}
+
+
+/**
+ * <header> generarFila(planta) </header>
+ * 
+ * <summary>
+ * Método que se encarga de generar una fila completa de la tabla 
+ * con la categoria de las plantas seleccionadas para cambio modificada
+ * </summary>
+ * 
+ * <pre>
+ * Necesita de un objeto clsPlanta ya existente en la base de datos FrayGuillermo
+ * </pre>
+ * 
+ * <post>
+ * Generará una fila completa con los datos necesarios para la tabla
+ * </post>
+ * @param {clsPlanta} planta
+ * 
+ * @param{JSON} jsonCategorias
+ */
+function generarFila(planta, jsonCat) {
+    var filaAnterior = document.getElementById(planta.idPlanta);
+
+    var fila = document.createElement("tr");
+    fila.id = planta.idPlanta;
+    rellenarFilaConTexto(fila, planta.nombrePlanta);
+
+
+    elegirCategoria(jsonCat, planta.idCategoria, fila);
+    if (planta.precio == 0) {
+
+        rellenarFilaConTexto(fila, "0");
+
+    }
+    else {
+        rellenarFilaConTexto(fila, planta.precio);
+    }
+    var columna = document.createElement("td");
+    var check = generarCheckBox("checkbox" + planta.idPlanta);
+    columna.appendChild(check);
+    fila.appendChild(columna);
+
+
+
+    filaAnterior.replaceWith(fila);
 }
 
 /**
@@ -376,7 +469,7 @@ function modificarTablaTrasPut() {
  * */
 function generarCheckBox(idCheck) {
 
- 
+
     var check = document.createElement("input");
     check.type = "checkbox";
     var select = document.getElementById("selectacion");
@@ -386,7 +479,7 @@ function generarCheckBox(idCheck) {
     check.setAttribute("id", idCheck);
     check.setAttribute("value", opcionSeleccionada.value);
 
-   
+
 
     return check;
 }

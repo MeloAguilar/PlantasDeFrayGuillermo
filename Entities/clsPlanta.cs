@@ -9,6 +9,7 @@ namespace Entities
 {
     public class clsPlanta
     {
+
         public int IdPlanta { get; set; }
         public string NombrePlanta { get; set; }
         public string Descripcion { get; set; }

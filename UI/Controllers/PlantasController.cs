@@ -72,14 +72,33 @@ namespace apiDeFrayGuillermo.Controllers
 
         // POST api/<PlantasController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] clsPlanta planta)
         {
+            IActionResult result = null;
+            int filasAfectadas = 0;
+            try
+            {
+                filasAfectadas = gestion.CrearPlantaBL(planta);
+            }
+            catch (System.Web.Http.HttpResponseException e)
+            {
+                result = BadRequest();
+            }
+            if (filasAfectadas == 0)
+            {
+                result=NoContent();
+            }
+            else
+            {
+                result = Ok();
+            }
 
+            return result;
         }
 
         // PUT api/<PlantasController>/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody]clsPlanta planta)
+        public IActionResult Put(int id, [FromBody] clsPlanta planta)
         {
             IActionResult result = null;
             int filasAfectadas = 0;

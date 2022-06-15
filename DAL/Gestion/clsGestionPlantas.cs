@@ -1,4 +1,5 @@
 ﻿using DAL.Conexion;
+using Entities;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -64,7 +65,7 @@ namespace DAL.Gestion
                 cnn = miConexion.getConnection();
                 miComando.Connection = cnn;
                 miComando.Parameters.AddWithValue("@IdPlanta", idPlanta);
-                miComando.Parameters.AddWithValue("@IdCategoria",idCategoria);
+                miComando.Parameters.AddWithValue("@IdCategoria", idCategoria);
                 miComando.CommandText = "Update plantas set idCategoria = @IdCategoria Where idPlanta = @IdPlanta";
                 filasAfectadas = miComando.ExecuteNonQuery();
 
@@ -80,8 +81,52 @@ namespace DAL.Gestion
             }
             return filasAfectadas;
         }
+
+
+
+        /// <header>int crearPlanta(clsPlanta planta)</header>
+        /// 
+        /// <summary>
+        /// Procedimietno que se encarga de insertar una planta nueva en la base de datos FrayGuillermo
+        /// </summary>
+        /// 
+        /// <pre>
+        /// ninguno de los atributos del objeto clsPlanta puede ser null o menor a 0 en el caso del precio
+        /// </pre>
+        /// 
+        /// <post>
+        /// Devolverá la cantidad de filas afectadas. 1 -> en caso de que se inserte la planta, 0-> En caso de que exista algún fallo en la base de datos al insertar la planta
+        /// </post>
+        /// <param name="planta"></param>
+        /// <returns></returns>
+        public int CrearPlanta(clsPlanta planta)
+        {
+            int filasAfectadas;
+            SqlConnection cnn = null;
+
+            try
+            {
+                SqlCommand miComando = new SqlCommand();
+                cnn = miConexion.getConnection();
+                miComando.Connection = cnn;
+                miComando.Parameters.AddWithValue("@nombrePlanta", planta.NombrePlanta);
+                miComando.Parameters.AddWithValue("@idCategoria", planta.IdCategoria);
+                miComando.Parameters.AddWithValue("@precio", planta.Precio);
+                miComando.Parameters.AddWithValue("@descripcion", planta.Descripcion);
+                miComando.CommandText = "Insert into plantas( nombrePlanta, idCategoria, precio, descripcion) Values @nombrePlanta, @idCategoria, @precio, @descripcion";
+                filasAfectadas = miComando.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+
+
+            return filasAfectadas;
+        }
     }
 
 
-    
+
 }
