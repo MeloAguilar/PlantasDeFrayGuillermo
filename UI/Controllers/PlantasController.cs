@@ -90,7 +90,7 @@ namespace apiDeFrayGuillermo.Controllers
             }
             else
             {
-                result = Ok();
+                result = Ok(planta);
             }
 
             return result;
@@ -124,8 +124,28 @@ namespace apiDeFrayGuillermo.Controllers
 
         // DELETE api/<PlantasController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            IActionResult result = null;
+            int filasAfectadas = 0;
+            try
+            {
+                filasAfectadas = gestion.EliminarPlanta(id);
+            }
+            catch (System.Web.Http.HttpResponseException e)
+            {
+                result = BadRequest();
+            }
+            if (filasAfectadas == 0)
+            {
+                result=NoContent();
+            }
+            else
+            {
+                result = Ok();
+            }
+
+            return result;
         }
     }
 }

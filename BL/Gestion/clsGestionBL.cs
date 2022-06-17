@@ -44,6 +44,11 @@ namespace BL.Gestion
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="planta"></param>
+        /// <returns></returns>
         public int CrearPlantaBL(clsPlanta planta)
         {
 
@@ -52,6 +57,12 @@ namespace BL.Gestion
                 planta.Precio = 0;
             }
             return gestionDal.CrearPlanta(planta);
+        }
+
+
+        public int EliminarPlanta(int id) 
+        {
+            return gestionDal.EliminarPlanta(id);   
         }
     }
 }

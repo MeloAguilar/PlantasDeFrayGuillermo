@@ -34,13 +34,13 @@ class clsCategoria {
 
 
 function InicializaEventos() {
-    document.getElementById("formulario").addEventListener("load", generarFormulario(), true);
+    document.getElementById("formulario").addEventListener("load", GenerarFormulario(), true);
 
-    document.getElementById("btnAceptar").addEventListener("click", introducirPlantaMediantePost(), true);
+    document.getElementById("btn").addEventListener("click", generarPlantaParaPost, true);
 }
 
 /**
- * <header> generarFormulario() </header>
+ * <header> GenerarFormulario() </header>
  * 
  * <summary>
  * Procedimiento que se encarga de generar el 
@@ -52,21 +52,33 @@ function InicializaEventos() {
  * 
  * <post></post>
  */
-function generarFormulario() {
-    var form = document.getElementById("formulario")
+function GenerarFormulario() {
+    var form = document.getElementById("formulario");
    generarInputText(form, "Nombre");
     var label = document.createElement("label");
     label.textContent = "Categoria";
-
-    generarSelectEleccionCategoria(form, "idCategoria");
+    GenerarSelectEleccionCategoria(form, "idCategoria");
     generarInputText(form, "Descripcion");
     generarInputText(form, "Precio");
   
 }
 
 
-
-function generarSelectEleccionCategoria(form, idSelect) {
+/**
+ * <header> GenerarSelectEleccionCategoria(form, idSelect) </header>
+ * 
+ * <summary>
+ *  Método que se enarga de generar el ellemento Html select y conforma las opciones, 
+ *  con un string como identificador de este y un elemento div que debe encontrarse en la pagina Html a crear
+ * </summary>
+ * 
+ * <pre></pre>
+ * 
+ * <post></post>
+ * @param {HTMLDivElement} form
+ * @param {string} idSelect
+ */
+function GenerarSelectEleccionCategoria(form, idSelect) {
     var llamada = new XMLHttpRequest();
     llamada.open("GET", "http://localhost:5027/api/Categorias", true);
 
@@ -75,28 +87,83 @@ function generarSelectEleccionCategoria(form, idSelect) {
 
         }
         else if (llamada.readyState == 4 && llamada.status == 200) {
+           
             var div = document.createElement("div");
             var label = document.createElement("label");
-            label.textContent = "Categoria"
-            div.className = "form-control";
-            var categorias = JSON.parse(llamada.responseText);
+            label.textContent = "Categoría"
+            var br = document.createElement("br");
+            var arrayCategorias = JSON.parse(llamada.responseText);
             var select = document.createElement("select");
             select.id = idSelect;
-            for (var i = 0; i < categorias.length; i++) {
+            select.className = "form-select-sm";
+            for (var i = 0; i < arrayCategorias.length; i++) {
                 var option = document.createElement("option");
-                option.value = categorias[i].idCategoria;
-                option.text = categorias[i].nombreCategoria;
+                option.setAttribute("id", "op" + arrayCategorias[i].idCategoria);
+                option.text = arrayCategorias[i].nombreCategoria;
+                option.value = arrayCategorias[i].idCategoria;
                 select.appendChild(option);
-                div.appendChild(select);
-                form.appendChild(div);
+                
             }
-           
+            var boton = document.createElement("input");
+            boton.type = "submit";
+            boton.id = "btn";
+            boton.className = "btn btn-success";
+            div.appendChild(label);
+            div.appendChild(br);
+            div.appendChild(select);
+            var br2 = document.createElement("br");
+            form.appendChild(div);
+            form.appendChild(br2);
+            form.appendChild(boton);
         }
     };
 
     llamada.send();
 }
 
+
+
+function generarPlantaParaPost() {
+    var planta = new clsPlanta();
+    var nombre = document.getElementById("Nombre");
+    var descripcion = document.getElementById("Descripcion");
+    var precioText = document.getElementById("Precio");
+    var precio = parseFloat(precioText.value);
+    var select = document.getElementById("idCategoria");
+    var categoria = select.options[select.selectedIndex];
+    planta.nombrePlanta = nombre.value;
+    planta.idCategoria = parseInt(categoria.value);
+    planta.precio = precio;
+    planta.descripcion = descripcion.value;
+    IntroducirPlantaMediantePost(planta);
+    modificarPaginaDespuesDeInsercion();
+
+}
+
+/**
+ * <header> modificarPaginaDespuesDeInsercion() </header>
+ * 
+ * <summary>
+ * 
+ * </summary>
+ * 
+ * <pre>
+ * 
+ * </pre>
+ * 
+ * <post>
+ * 
+ * </post>
+ * 
+ * */
+function modificarPaginaDespuesDeInsercion() {
+    var formulario = document.getElementById("formulario");
+    formulario.replaceWith("");
+
+    alert("La planta fue insertada con éxito");
+
+
+}
 
 
 /**
@@ -113,48 +180,49 @@ function generarSelectEleccionCategoria(form, idSelect) {
  * Siempre que la planta no se encuentre repetida, 
  * se introducirá la planta en la base de datos
  * </post>
+ * 
+ * @param {clsPlanta} planta
  * */
-function introducirPlantaMediantePost() {
-    var planta = new clsPlanta();
+function IntroducirPlantaMediantePost(planta) {
     var llamada = new XMLHttpRequest();
     llamada.open("POST", "http://localhost:5027/api/Plantas", true);
-
+    var json = JSON.stringify(planta);
+    llamada.setRequestHeader('Content-type', 'text/json; charset=utf-8');
     llamada.onreadystatechange = function () {
         if (llamada.readyState < 4) {
-
         } else if (llamada.readyState == 4 && llamada.status == 200) {
-            var nombre = document.getElementById("Nombre");
-            var descripcion = document.getElementById("Descripcion");
-            var categoria = document.getElementById("idCategoria");
-            var precio = document.getElementById("Precio");
-
-           
-            planta.nombrePlanta = nombre.value;
-            planta.categoria = categoria.options[categoria.selectedIndex].value;
-            planta.descripcion = descripcion.value;
-            planta.precio = parseInt(precio.value);
-
-            alert("La planta fue insertada con éxito");
+            
 
 
         }
     };
     
-    llamada.send(JSON.stringify(planta));
+    llamada.send(json);
 }
 
 
-
+/**
+ * <header> generarInputText(form, idText)
+ * 
+ * <summary>
+ * Método que se encarga de, dado un id y un elemento Html form,
+ * generar un elemento div, que será hijo del form,
+ * con dis hijos, un elemento label cuyo textContent sea igual al idText pasado como parámetro
+ * y un input text.
+ * @param {HTMLDivElement} form
+ * @param {string} idText
+ */
 function generarInputText(form, idText) {
     var div = document.createElement("div");
+    var br = document.createElement("br");
     var label = document.createElement("label");
-    div.className = "form-control";
     label.nodeValue = idText;
     label.textContent = idText
     var input = document.createElement("input");
     input.type = "text";
     input.id = idText;
     div.appendChild(label);
+    div.appendChild(br);
     div.appendChild(input);
     form.appendChild(div);
 }

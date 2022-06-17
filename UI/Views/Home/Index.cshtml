@@ -5,7 +5,15 @@
     ViewData["Title"] = "Index";
 }
 
-<h6>Elija una Categoría</h6>
+<div>
+    <ul class="list-group-item-light">
+        <li><a href="~/Paginas/CrearPlanta.html">Crear Planta</a></li>
+        <li><a href="~/Paginas/CambiarCategoria.html">Modificar Categorias</a></li>
+        <li><a href="~/Paginas/MostrarPlantasParaEliminar.html">Eliminar Planta</a></li>
+    </ul>
+</div>
+
+@*<h6>Elija una Categoría</h6>
 <form method="post">
     <div class="row-col-md-11">
 
@@ -19,7 +27,7 @@
     <div>
         @Html.ActionLink("Modificar Categoría", "CambioDeCategoria")
         <hr />
-        <a href = "~/Paginas/Plantas.html">AJAX</a>
+
     </div>
 
 
@@ -63,16 +71,14 @@
 
                 </tbody>
             </table>
-
-        }
+*@
+@*        }
         else
         {
             ViewBag.Error = "No se ha seleccionado ninguna Categoría";
         }
     </div>
 
-</form>
-
-<hr />
+</form>*@
 
 

@@ -20,15 +20,20 @@ class clsCategoria {
 }
 
 /**
+ * 
+ * <header> inicializaEventos() </header>
+ * 
+ * <summary>
  * funcion que comprueba el estado del boton
  * btnSaludar y llama a la funcion mostrar si este es clicado
+ * </summary>
  * */
 function inicializaEventos() {
 
-    /* document.onchange = mostrar();*/
-    document.getElementById("tabla").addEventListener("change", mostrar(), true)
-    //documen.getElementById("tabla").addEventListener("load", mostrar, true);
-    document.getElementById("btnAceptar").addEventListener("click", recogerDatosChecks, true);
+   
+    document.getElementById("tabla").addEventListener("change", mostrar(), true);
+
+    document.getElementById("btnAceptar").addEventListener("click", RecogerDatosChecks, true);
 
 
 
@@ -61,7 +66,7 @@ function mostrar() {
         else if ((llamada2.readyState == 4 && llamada2.status == 200)) {
 
             arrayCat = JSON.parse(llamada2.responseText);
-            rellenarSelectCategorias(arrayCat);
+            RellenarSelectCategorias(arrayCat);
 
 
         }
@@ -75,8 +80,8 @@ function mostrar() {
 
         }
         else if ((llamada.readyState == 4 && llamada.status == 200)) {
-            var jsonPlantas = JSON.parse(llamada.responseText);
-            rellenarPlantas(jsonPlantas, arrayCat);
+            listaPlantas = JSON.parse(llamada.responseText);
+            RellenarPlantas(listaPlantas, arrayCat);
 
 
 
@@ -131,7 +136,7 @@ function rellenarFilaConTexto(fila, texto) {
  * <post></post>
  * @param {JSON} arrayCat
  */
-function rellenarSelectCategorias(arrayCat) {
+function RellenarSelectCategorias(arrayCat) {
     var conteo = 1;
     for (var i = 0; i < arrayCat.length; i++) {
         const option = document.createElement("option")
@@ -160,10 +165,10 @@ function rellenarSelectCategorias(arrayCat) {
  * y una lista con todas las categorias de la base de datos Fray Guillermo</pre>
  *
  * <post>nada</post>
- * @param {JSON} jsonPlantas
- * @param {JSON} jsonCat
+ * @param {JSON} arrayPlantas
+ * @param {JSON} arrayCategorias
  */
-function rellenarPlantas(jsonPlantas, jsonCat) {
+function RellenarPlantas(arrayPlantas, arrayCategorias) {
 
     var cuerpoTabla = document.createElement("tbody");
 
@@ -171,14 +176,14 @@ function rellenarPlantas(jsonPlantas, jsonCat) {
     tabla.appendChild(cuerpoTabla);
 
 
-    for (var i = 0; i < jsonPlantas.length; i++) {
+    for (var i = 0; i < arrayPlantas.length; i++) {
         var fila = document.createElement("tr");
-        fila.id = jsonPlantas[i].idPlanta;
-        fila.nodeName = jsonPlantas[i].idPlanta;
-        rellenarFilaConTexto(fila, jsonPlantas[i].nombrePlanta);
-        elegirCategoria(jsonCat, jsonPlantas[i].idCategoria, fila);
-        if (jsonPlantas[i].precio != null) {
-            rellenarFilaConTexto(fila, jsonPlantas[i].precio);
+        fila.id = arrayPlantas[i].idPlanta;
+        fila.nodeName = arrayPlantas[i].idPlanta;
+        rellenarFilaConTexto(fila, arrayPlantas[i].nombrePlanta);
+        ElegirCategoria(arrayCategorias, arrayPlantas[i].idCategoria, fila);
+        if (arrayPlantas[i].precio != null) {
+            rellenarFilaConTexto(fila, arrayPlantas[i].precio);
         }
         else {
             rellenarFilaConTexto(fila, "0");
@@ -186,7 +191,7 @@ function rellenarPlantas(jsonPlantas, jsonCat) {
 
 
 
-        var check = generarCheckBox("checkbox" + jsonPlantas[i].idPlanta);
+        var check = GenerarCheckBox("checkbox" + arrayPlantas[i].idPlanta);
         var columnaCheck = document.createElement("td");
         columnaCheck.appendChild(check);
 
@@ -211,17 +216,17 @@ function rellenarPlantas(jsonPlantas, jsonCat) {
  * <pre> </pre>
  * 
  * <post></post>
- * @param {JSON} jsonCat
+ * @param {JSON} arrayCategorias
  * @param {int} idCategoriaPlanta
  * @param {document.createElement} fila
  */
-function elegirCategoria(jsonCat, idCategoriaPlanta, fila) {
+function ElegirCategoria(arrayCategorias, idCategoriaPlanta, fila) {
     var categoria;
     var salir = false;
-    for (var i = 0; i < jsonCat.length && !salir; i++) {
-        if (idCategoriaPlanta == jsonCat[i].idCategoria) {
-            rellenarFilaConTexto(fila, jsonCat[i].nombreCategoria);
-            categoria = jsonCat[i];
+    for (var i = 0; i < arrayCategorias.length && !salir; i++) {
+        if (idCategoriaPlanta == arrayCategorias[i].idCategoria) {
+            rellenarFilaConTexto(fila, arrayCategorias[i].nombreCategoria);
+            categoria = arrayCategorias[i];
             salir = true;
         }
     }
@@ -249,7 +254,7 @@ function elegirCategoria(jsonCat, idCategoriaPlanta, fila) {
  * <post>nada</post>
  * 
  * */
-function recogerDatosChecks() {
+function RecogerDatosChecks() {
 
     var llamada = new XMLHttpRequest();
     llamada.open("GET", "http://localhost:5027/api/Plantas", true);
@@ -259,7 +264,7 @@ function recogerDatosChecks() {
         } else if (llamada.readyState == 4 && llamada.status == 200) {
             /*comprobarCheckBoxes();*/
             var jsonPlantas = JSON.parse(llamada.responseText);
-            cambiarCategoriasVariasPlantas(jsonPlantas);
+            CambiarCategoriasVariasPlantas(jsonPlantas);
         }
 
     }
@@ -277,15 +282,15 @@ function recogerDatosChecks() {
  * Método que modifica el value de todos los checkboxes en base al value seleccionado del select 
  * 
  */
-function comprobarCheckBoxes() {
+function ComprobarCheckBoxes() {
     var tabla = document.getElementById("tbody");
     var select = document.getElementById("selectacion");
-    var valorSeleccionado = select.options[select.selectedIndex];
+    var valorSeleccionado = select.options[select.selectedIndex].value;
     
     try {
         for (var i = 1; i <= 1000; i++) {
             var check = document.getElementById("checkbox" + i);
-            check.value = valorSeleccionado.value;
+            check.value = valorSeleccionado;
         }
         } catch (Exception) {
 
@@ -303,14 +308,14 @@ function comprobarCheckBoxes() {
  * 
  * <pre>jsonPlantas debe ser un objeto JSON que contenga una lista de objetos clsPlanta en su interior</pre>
  * <post>nada</post>
- * @param {any} jsonPlantas
+ * @param {clsPlanta[]} arrayPlantas
  */
-function cambiarCategoriasVariasPlantas(jsonPlantas) {
+function CambiarCategoriasVariasPlantas(arrayPlantas) {
     var check;
-    for (var i = 0; i < jsonPlantas.length; i++) {
-        check = document.getElementById("checkbox" + jsonPlantas[i].idPlanta);
+    for (var i = 0; i < arrayPlantas.length; i++) {
+        check = document.getElementById("checkbox" + arrayPlantas[i].idPlanta);
         if (check.checked) {
-            cambiarCategoriaPlanta(jsonPlantas[i], check);
+            CambiarCategoriaPlanta(arrayPlantas[i], check);
 
         }
 
@@ -326,16 +331,16 @@ function cambiarCategoriasVariasPlantas(jsonPlantas) {
  * 
  * <pre></pre>
  * <post></post>
- * @param {any} planta
+ * @param {clsPlanta} planta
+ * @param {HtmlInputElement} checkbox
  */
-function cambiarCategoriaPlanta(planta, check) {
-    comprobarCheckBoxes();
-    var numCat = parseInt(check.value);
+function CambiarCategoriaPlanta(planta, checkbox) {
+    ComprobarCheckBoxes();
+    var numCat = parseInt(checkbox.value);
     planta.idCategoria = numCat;
-    check.checked = false;
+    checkbox.checked = false;
     PutPlanta(planta);
-
-    modificarTablaTrasPut(planta);
+    ModificarTablaTrasPut(planta);
 }
 
 
@@ -384,7 +389,7 @@ function PutPlanta(planta) {
  * 
  * <post></post<
  */
-function modificarTablaTrasPut(planta) {
+function ModificarTablaTrasPut(planta) {
 
 
 
@@ -392,9 +397,9 @@ function modificarTablaTrasPut(planta) {
     llamada.open("GET", "http://localhost:5027/api/Categorias", true);
     llamada.onreadystatechange = function () {
         if (llamada.readyState == 4 && llamada.status == 200) {
-            var jsonCat = JSON.parse(llamada.responseText);
+            var arrayCategoria = JSON.parse(llamada.responseText);
             
-            generarFila(planta, jsonCat);
+            GenerarFila(planta, arrayCategoria);
         } else if (llamada.readyState < 4) {
 
         }
@@ -420,9 +425,9 @@ function modificarTablaTrasPut(planta) {
  * </post>
  * @param {clsPlanta} planta
  * 
- * @param{JSON} jsonCategorias
+ * @param {JSON} arrayCategorias
  */
-function generarFila(planta, jsonCat) {
+function GenerarFila(planta, arrayCategorias) {
     var filaAnterior = document.getElementById(planta.idPlanta);
 
     var fila = document.createElement("tr");
@@ -430,7 +435,7 @@ function generarFila(planta, jsonCat) {
     rellenarFilaConTexto(fila, planta.nombrePlanta);
 
 
-    elegirCategoria(jsonCat, planta.idCategoria, fila);
+    ElegirCategoria(arrayCategorias, planta.idCategoria, fila);
     if (planta.precio == 0) {
 
         rellenarFilaConTexto(fila, "0");
@@ -440,7 +445,7 @@ function generarFila(planta, jsonCat) {
         rellenarFilaConTexto(fila, planta.precio);
     }
     var columna = document.createElement("td");
-    var check = generarCheckBox("checkbox" + planta.idPlanta);
+    var check = GenerarCheckBox("checkbox" + planta.idPlanta);
     columna.appendChild(check);
     fila.appendChild(columna);
 
@@ -467,7 +472,7 @@ function generarFila(planta, jsonCat) {
  * 
  *  @param {string} idCheck
  * */
-function generarCheckBox(idCheck) {
+function GenerarCheckBox(idCheck) {
 
 
     var check = document.createElement("input");

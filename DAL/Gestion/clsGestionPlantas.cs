@@ -113,7 +113,32 @@ namespace DAL.Gestion
                 miComando.Parameters.AddWithValue("@idCategoria", planta.IdCategoria);
                 miComando.Parameters.AddWithValue("@precio", planta.Precio);
                 miComando.Parameters.AddWithValue("@descripcion", planta.Descripcion);
-                miComando.CommandText = "Insert into plantas( nombrePlanta, idCategoria, precio, descripcion) Values @nombrePlanta, @idCategoria, @precio, @descripcion";
+                miComando.CommandText = "Insert into plantas(nombrePlanta, idCategoria, precio, descripcion) Values (@nombrePlanta, @idCategoria, @precio, @descripcion)";
+                filasAfectadas = miComando.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+
+
+            return filasAfectadas;
+        }
+
+        public int EliminarPlanta(int id)
+        {
+            int filasAfectadas;
+            SqlConnection cnn = null;
+
+            try
+            {
+                SqlCommand miComando = new SqlCommand();
+                cnn = miConexion.getConnection();
+                miComando.Connection = cnn;
+                miComando.Parameters.AddWithValue("@idPlanta", id);
+           
+                miComando.CommandText = "Delete From plantas Where idPlanta = @idPlanta";
                 filasAfectadas = miComando.ExecuteNonQuery();
             }
             catch (Exception e)
@@ -127,6 +152,9 @@ namespace DAL.Gestion
         }
     }
 
+
+
+   
 
 
 }

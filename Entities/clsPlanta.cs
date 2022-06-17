@@ -11,8 +11,13 @@ namespace Entities
     {
 
         public int IdPlanta { get; set; }
+        [Required(ErrorMessage = "El nombre de la planta es necesario")]
         public string NombrePlanta { get; set; }
+
+  
         public string Descripcion { get; set; }
+
+        [Required(ErrorMessage = "La planta debe estar entre las categorias existentes")]
         public int IdCategoria { get; set; }
      
         public double Precio { get; set; }
