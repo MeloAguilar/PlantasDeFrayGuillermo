@@ -35,6 +35,8 @@ function inicializaEventos() {
 
     document.getElementById("btnAceptar").addEventListener("click", RecogerDatosChecks, true);
 
+    document.getElementById("selectacion").addEventListener("change", ComprobarCheckBoxes, true);
+
 
 
 }
@@ -290,16 +292,25 @@ function ComprobarCheckBoxes() {
     var tabla = document.getElementById("tbody");
     var select = document.getElementById("selectacion");
     var valorSeleccionado = select.options[select.selectedIndex].value;
-    
-    try {
-        for (var i = 1; i <= 1000; i++) {
-            var check = document.getElementById("checkbox" + i);
-            check.value = valorSeleccionado;
-        }
-        } catch (Exception) {
+    var llamada = new XMLHttpRequest();
+    llamada.open("GET", "http://localhost:5027/api/Plantas", true);
+  
+    llamada.onreadystatechange = function () {
+        if (llamada.readyState < 4) {
+
+        } else if (llamada.status == 200 && llamada.readyState == 4) {
+            var arrayPlantas = JSON.parse(llamada.responseText);
+            for (var i = 0; i < arrayPlantas.length; i++) {
+               
+                var check = document.getElementById("checkbox" + arrayPlantas[i].idPlanta);
+                check.value = valorSeleccionado;
+            }
 
         }
-    
+    };
+    llamada.send();
+  
+
 }
 /**
  * <header> cambiarCategoriaPlanta(jsonPlantas) </header>
