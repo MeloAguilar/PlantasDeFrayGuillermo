@@ -55,7 +55,7 @@ function inicializaEventos() {
 function mostrar() {
     var llamada2 = new XMLHttpRequest();
 
-    llamada2.open("GET", "http://localhost:5027/api/Categorias", true);
+    llamada2.open("GET", "http://localhost:5027/api/Categorias", false);
     var llamada = new XMLHttpRequest();
     llamada.open("GET", "http://localhost:5027/api/Plantas", true);
     var arrayCat;
@@ -109,12 +109,9 @@ function mostrar() {
   * @param {HtmlTableRowElement} fila
   * @param {string} texto
   */
-function rellenarFilaConTexto(fila, texto) {
+function CrearCelda(fila, texto) {
     var columna = document.createElement("td");
-
-    var nodoTexto = document.createTextNode(texto);
-
-    columna.appendChild(nodoTexto);
+    columna.textContent = texto;
     fila.appendChild(columna);
 }
 
@@ -180,13 +177,13 @@ function RellenarPlantas(arrayPlantas, arrayCategorias) {
         var fila = document.createElement("tr");
         fila.id = arrayPlantas[i].idPlanta;
         fila.nodeName = arrayPlantas[i].idPlanta;
-        rellenarFilaConTexto(fila, arrayPlantas[i].nombrePlanta);
+        CrearCelda(fila, arrayPlantas[i].nombrePlanta);
         ElegirCategoria(arrayCategorias, arrayPlantas[i].idCategoria, fila);
         if (arrayPlantas[i].precio != null) {
-            rellenarFilaConTexto(fila, arrayPlantas[i].precio);
+            CrearCelda(fila, arrayPlantas[i].precio);
         }
         else {
-            rellenarFilaConTexto(fila, "0");
+            CrearCelda(fila, "0");
         }
 
 
@@ -225,7 +222,7 @@ function ElegirCategoria(arrayCategorias, idCategoriaPlanta, fila) {
     var salir = false;
     for (var i = 0; i < arrayCategorias.length && !salir; i++) {
         if (idCategoriaPlanta == arrayCategorias[i].idCategoria) {
-            rellenarFilaConTexto(fila, arrayCategorias[i].nombreCategoria);
+            CrearCelda(fila, arrayCategorias[i].nombreCategoria);
             categoria = arrayCategorias[i];
             salir = true;
         }
@@ -255,19 +252,26 @@ function ElegirCategoria(arrayCategorias, idCategoriaPlanta, fila) {
  * 
  * */
 function RecogerDatosChecks() {
+    var success = confirm("¿Estas seguro de que deseas cambiar la categoria de las plantas seleccionadas?");
 
-    var llamada = new XMLHttpRequest();
-    llamada.open("GET", "http://localhost:5027/api/Plantas", true);
-    llamada.onreadystatechange = function () {
-        if (llamada.readyState < 4) {
+    if (success) {
+        var llamada = new XMLHttpRequest();
+        llamada.open("GET", "http://localhost:5027/api/Plantas", true);
+        llamada.onreadystatechange = function () {
+            if (llamada.readyState < 4) {
 
-        } else if (llamada.readyState == 4 && llamada.status == 200) {
-            /*comprobarCheckBoxes();*/
-            var jsonPlantas = JSON.parse(llamada.responseText);
-            CambiarCategoriasVariasPlantas(jsonPlantas);
-        }
+            } else if (llamada.readyState == 4 && llamada.status == 200) {
+                /*comprobarCheckBoxes();*/
+                var jsonPlantas = JSON.parse(llamada.responseText);
+                CambiarCategoriasVariasPlantas(jsonPlantas);
+            }
 
+        };
     }
+    else {
+        alert("No se modificarán las plantas");
+    }
+    
 
     llamada.send();
 
@@ -432,17 +436,17 @@ function GenerarFila(planta, arrayCategorias) {
 
     var fila = document.createElement("tr");
     fila.id = planta.idPlanta;
-    rellenarFilaConTexto(fila, planta.nombrePlanta);
+    CrearCelda(fila, planta.nombrePlanta);
 
 
     ElegirCategoria(arrayCategorias, planta.idCategoria, fila);
     if (planta.precio == 0) {
 
-        rellenarFilaConTexto(fila, "0");
+        CrearCelda(fila, "0");
 
     }
     else {
-        rellenarFilaConTexto(fila, planta.precio);
+        CrearCelda(fila, planta.precio);
     }
     var columna = document.createElement("td");
     var check = GenerarCheckBox("checkbox" + planta.idPlanta);

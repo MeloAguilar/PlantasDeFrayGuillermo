@@ -36,7 +36,7 @@ class clsCategoria {
 function InicializaEventos() {
     document.getElementById("formulario").addEventListener("load", GenerarFormulario(), true);
 
-    document.getElementById("btn").addEventListener("click", generarPlantaParaPost, true);
+    document.getElementById("btn").addEventListener("click", generarPlantaParaPost, false);
 }
 
 /**
@@ -57,9 +57,10 @@ function GenerarFormulario() {
    generarInputText(form, "Nombre");
     var label = document.createElement("label");
     label.textContent = "Categoria";
-    GenerarSelectEleccionCategoria(form, "idCategoria");
+    
     generarInputText(form, "Descripcion");
     generarInputText(form, "Precio");
+    GenerarSelectEleccionCategoria(form, "idCategoria");
   
 }
 
@@ -80,7 +81,7 @@ function GenerarFormulario() {
  */
 function GenerarSelectEleccionCategoria(form, idSelect) {
     var llamada = new XMLHttpRequest();
-    llamada.open("GET", "http://localhost:5027/api/Categorias", true);
+    llamada.open("GET", "http://localhost:5027/api/Categorias", false);
 
     llamada.onreadystatechange = function () {
         if (llamada.readyState < 4) {
@@ -136,7 +137,7 @@ function generarPlantaParaPost() {
     planta.precio = precio;
     planta.descripcion = descripcion.value;
     IntroducirPlantaMediantePost(planta);
-    modificarPaginaDespuesDeInsercion();
+
 
 }
 
@@ -185,14 +186,14 @@ function modificarPaginaDespuesDeInsercion() {
  * */
 function IntroducirPlantaMediantePost(planta) {
     var llamada = new XMLHttpRequest();
-    llamada.open("POST", "http://localhost:5027/api/Plantas", true);
+    llamada.open("POST", "http://localhost:5027/api/Plantas", false);
     var json = JSON.stringify(planta);
     llamada.setRequestHeader('Content-type', 'text/json; charset=utf-8');
     llamada.onreadystatechange = function () {
         if (llamada.readyState < 4) {
         } else if (llamada.readyState == 4 && llamada.status == 200) {
-            
 
+            modificarPaginaDespuesDeInsercion();
 
         }
     };

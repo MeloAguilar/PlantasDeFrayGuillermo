@@ -1,12 +1,23 @@
-﻿planta<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <title></title>
+    <script src="..\js\EliminarPlantaScript.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
 </head>
 <body>
-        <div>
-        <select id="selectacion" class="form-select form-select-sm"></select>
+    <headerIndex>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-auto">
+            <div class="container-fluid">
+                <a href="CambiarCategoria.html">
+                    <h4 style="margin-left:3.5rem">El Boticario de Fray Guillermo</h4>
+                </a>
+            </div>
+        </nav>
+    </headerIndex>
+    <div>
         <table id="tabla" class="table">
             <thead>
                 <tr>
@@ -24,11 +35,15 @@
                     </th>
                 </tr>
             </thead>
+            <tbody id="tbody">
+            </tbody>
 
         </table>
 
-        <input type="button" value="Cambiar" id="btnAceptar" class="btn btn-primary" />
+        <input type="button" value="Eliminar" id="btnEliminar" class="btn btn-danger" />
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
 
 </body>
+
 </html>
