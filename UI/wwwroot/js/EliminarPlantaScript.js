@@ -74,7 +74,7 @@ function EliminarRegistrosSeleccionados() {
  * @param {Int32Array} idPlanta
  * */
 function DeletePlanta(idplanta) {
-    var success = confirm("Está seguro de que desea eliminar el registro");
+    var success = confirm("Está seguro de que desea eliminar el registro "+idplanta);
     if (success) {
         var llamada = new XMLHttpRequest();
         llamada.open("DELETE", "http://localhost:5027/api/Plantas/" + idplanta, false);
@@ -87,10 +87,11 @@ function DeletePlanta(idplanta) {
                 document.getElementById(idplanta).remove();
             }
         };
+        llamada.send(null);
     } else {
         alert("La planta con id: " + idplanta + " no se eliminó");
     }
-    llamada.send(null);
+    
 
 }
 

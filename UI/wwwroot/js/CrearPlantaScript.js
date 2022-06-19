@@ -159,8 +159,8 @@ function generarPlantaParaPost() {
  * */
 function modificarPaginaDespuesDeInsercion() {
     var formulario = document.getElementById("formulario");
-    formulario.replaceWith("");
-
+    formulario.replaceChildren("");
+    GenerarFormulario();
     alert("La planta fue insertada con éxito");
 
 
