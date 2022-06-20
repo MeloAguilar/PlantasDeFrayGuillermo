@@ -30,12 +30,15 @@ class clsCategoria {
  * */
 function inicializaEventos() {
 
-   
-    document.getElementById("tabla").addEventListener("change", mostrar(), true);
 
+    //Llama al método mostrar siempre que carga la página
+    document.getElementById("tabla").addEventListener("load", mostrar(), true);
+
+    //Llama al método RecogerDatosChecks siempre que se hace click en el input type button con id btnAceptar
     document.getElementById("btnAceptar").addEventListener("click", RecogerDatosChecks, true);
 
-    document.getElementById("selectacion").addEventListener("change", ComprobarCheckBoxes, true);
+    //Llama al método ComprobarValueCheckBoxes siempre que cambie el valor seleccionado en el elemento Html select con id "selectacion"
+    document.getElementById("selectacion").addEventListener("change", ComprobarValueCheckBoxes, true);
 
 
 
@@ -56,17 +59,20 @@ function inicializaEventos() {
  * */
 function mostrar() {
     var llamada2 = new XMLHttpRequest();
-
+    var imagn = document.createElement("img");
+    imagn.src = "../img/carga1.png";
     llamada2.open("GET", "http://localhost:5027/api/Categorias", false);
     var llamada = new XMLHttpRequest();
     llamada.open("GET", "http://localhost:5027/api/Plantas", true);
     var arrayCat;
     llamada2.onreadystatechange = function () {
         if (llamada2.readyState < 4) {
+            var div = document.getElementById("imagen");
 
+            div.appendChild(imagn);
         }
         else if ((llamada2.readyState == 4 && llamada2.status == 200)) {
-
+            imagn.remove();
             arrayCat = JSON.parse(llamada2.responseText);
             RellenarSelectCategorias(arrayCat);
 
@@ -79,9 +85,12 @@ function mostrar() {
     llamada.onreadystatechange = function () {
         var listaPlantas;
         if (llamada.readyState < 4) {
+            var div = document.getElementById("imagen");
 
+            div.appendChild(imagn);
         }
         else if ((llamada.readyState == 4 && llamada.status == 200)) {
+            imagn.remove();
             listaPlantas = JSON.parse(llamada.responseText);
             RellenarPlantas(listaPlantas, arrayCat);
 
@@ -254,6 +263,8 @@ function ElegirCategoria(arrayCategorias, idCategoriaPlanta, fila) {
  * 
  * */
 function RecogerDatosChecks() {
+    var imagn = document.createElement("img");
+    imagn.src = "../img/carga1.png";
     var success = confirm("¿Estas seguro de que deseas cambiar la categoria de las plantas seleccionadas?");
 
     if (success) {
@@ -261,21 +272,28 @@ function RecogerDatosChecks() {
         llamada.open("GET", "http://localhost:5027/api/Plantas", true);
         llamada.onreadystatechange = function () {
             if (llamada.readyState < 4) {
+                var div = document.getElementById("imagen");
 
+                div.appendChild(imagn);
             } else if (llamada.readyState == 4 && llamada.status == 200) {
-                /*comprobarCheckBoxes();*/
+                imagn.remove();
                 var jsonPlantas = JSON.parse(llamada.responseText);
                 CambiarCategoriasVariasPlantas(jsonPlantas);
             }
 
         };
+
+        llamada.send();
     }
     else {
         alert("No se modificarán las plantas");
+        var checks = document.querySelectorAll("input");
+        for (var i = 0; i < checks.length; i++) {
+            checks[i].checked = false;
+        }
     }
-    
 
-    llamada.send();
+
 
 }
 
@@ -288,20 +306,25 @@ function RecogerDatosChecks() {
  * Método que modifica el value de todos los checkboxes en base al value seleccionado del select 
  * 
  */
-function ComprobarCheckBoxes() {
+function ComprobarValueCheckBoxes() {
+    var imagn = document.createElement("img");
+    imagn.src = "../img/carga1.png";
     var tabla = document.getElementById("tbody");
     var select = document.getElementById("selectacion");
     var valorSeleccionado = select.options[select.selectedIndex].value;
     var llamada = new XMLHttpRequest();
     llamada.open("GET", "http://localhost:5027/api/Plantas", true);
-  
+
     llamada.onreadystatechange = function () {
         if (llamada.readyState < 4) {
+            var div = document.getElementById("imagen");
 
+            div.appendChild(imagn);
         } else if (llamada.status == 200 && llamada.readyState == 4) {
+            imagn.remove();
             var arrayPlantas = JSON.parse(llamada.responseText);
             for (var i = 0; i < arrayPlantas.length; i++) {
-               
+
                 var check = document.getElementById("checkbox" + arrayPlantas[i].idPlanta);
                 check.value = valorSeleccionado;
             }
@@ -309,7 +332,7 @@ function ComprobarCheckBoxes() {
         }
     };
     llamada.send();
-  
+
 
 }
 /**
@@ -330,6 +353,7 @@ function CambiarCategoriasVariasPlantas(arrayPlantas) {
     for (var i = 0; i < arrayPlantas.length; i++) {
         check = document.getElementById("checkbox" + arrayPlantas[i].idPlanta);
         if (check.checked) {
+
             CambiarCategoriaPlanta(arrayPlantas[i], check);
 
         }
@@ -350,12 +374,12 @@ function CambiarCategoriasVariasPlantas(arrayPlantas) {
  * @param {HtmlInputElement} checkbox
  */
 function CambiarCategoriaPlanta(planta, checkbox) {
-    ComprobarCheckBoxes();
+    ComprobarValueCheckBoxes();
     var numCat = parseInt(checkbox.value);
     planta.idCategoria = numCat;
     checkbox.checked = false;
     PutPlanta(planta);
-    ModificarTablaTrasPut(planta);
+
 }
 
 
@@ -374,15 +398,19 @@ function CambiarCategoriaPlanta(planta, checkbox) {
  */
 function PutPlanta(planta) {
     var llamada = new XMLHttpRequest();
-
+    var imagn = document.createElement("img");
+    imagn.src = "../img/carga1.png";
     llamada.open("PUT", "http://localhost:5027/api/Plantas/" + planta.idPlanta);
     var json = JSON.stringify(planta);
     llamada.setRequestHeader('Content-type', 'text/json; charset=utf-8');
     llamada.onreadystatechange = function () {
-        if (llamada.readyState == 4 && llamada.status == 200) {
+        if (llamada.readyState < 4) {
+            var div = document.getElementById("imagen");
 
-        } else if(llamada.readyState < 4){
-
+            div.appendChild(imagn);
+        } else if (llamada.readyState == 4 && llamada.status == 200) {
+            imagn.remove();
+            ModificarTablaTrasPut(planta);
         }
     };
 
@@ -405,18 +433,26 @@ function PutPlanta(planta) {
  * <post></post<
  */
 function ModificarTablaTrasPut(planta) {
-
+    var imagn = document.createElement("img");
+    imagn.src = "../img/carga1.png";
 
 
     var llamada = new XMLHttpRequest();
     llamada.open("GET", "http://localhost:5027/api/Categorias", true);
     llamada.onreadystatechange = function () {
-        if (llamada.readyState == 4 && llamada.status == 200) {
-            var arrayCategoria = JSON.parse(llamada.responseText);
-            
-            GenerarFila(planta, arrayCategoria);
-        } else if (llamada.readyState < 4) {
+        if (llamada.readyState < 4) {
 
+            var div = document.getElementById("imagen");
+
+            div.appendChild(imagn);
+
+
+
+        } else if (llamada.readyState == 4 && llamada.status == 200) {
+            imagn.remove();
+            var arrayCategoria = JSON.parse(llamada.responseText);
+
+            GenerarFila(planta, arrayCategoria);
         }
     };
     llamada.send();

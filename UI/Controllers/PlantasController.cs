@@ -6,7 +6,7 @@ using DAL.Listados;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
 
 namespace apiDeFrayGuillermo.Controllers
 {
@@ -16,7 +16,13 @@ namespace apiDeFrayGuillermo.Controllers
     {
         private clsGestionBL gestion = new clsGestionBL();
         private clsListadosBL listas = new clsListadosBL();
-        // GET: api/<PlantasController>
+
+
+
+
+
+
+        // GET: api/Plantas
         [HttpGet]
         public IActionResult Get()
         {
@@ -43,7 +49,8 @@ namespace apiDeFrayGuillermo.Controllers
             return result;
         }
 
-        // GET api/<PlantasController>/5
+        // GET api/Plantas/5
+        
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
@@ -70,7 +77,7 @@ namespace apiDeFrayGuillermo.Controllers
             return result;
         }
 
-        // POST api/<PlantasController>
+        // POST api/Plantas
         [HttpPost]
         public IActionResult Post([FromBody] clsPlanta planta)
         {
@@ -96,7 +103,7 @@ namespace apiDeFrayGuillermo.Controllers
             return result;
         }
 
-        // PUT api/<PlantasController>/5
+        // PUT api/Plantas/5
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] clsPlanta planta)
         {
@@ -122,7 +129,9 @@ namespace apiDeFrayGuillermo.Controllers
             return result;
         }
 
-        // DELETE api/<PlantasController>/5
+
+
+        // DELETE api/Plantas/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

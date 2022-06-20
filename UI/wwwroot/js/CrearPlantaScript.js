@@ -26,13 +26,6 @@ class clsCategoria {
 
 
 
-
-
-
-
-
-
-
 function InicializaEventos() {
     document.getElementById("formulario").addEventListener("load", GenerarFormulario(), true);
 
@@ -48,20 +41,20 @@ function InicializaEventos() {
  * para realizar el POST de la nueva planta
  * </summary>
  * 
- * <pre></pre>
+ * <pre>nada</pre>
  * 
  * <post></post>
  */
 function GenerarFormulario() {
     var form = document.getElementById("formulario");
-   generarInputText(form, "Nombre");
+    generarInputText(form, "Nombre");
     var label = document.createElement("label");
     label.textContent = "Categoria";
-    
+
     generarInputText(form, "Descripcion");
     generarInputText(form, "Precio");
     GenerarSelectEleccionCategoria(form, "idCategoria");
-  
+
 }
 
 
@@ -73,22 +66,25 @@ function GenerarFormulario() {
  *  con un string como identificador de este y un elemento div que debe encontrarse en la pagina Html a crear
  * </summary>
  * 
- * <pre></pre>
+ * <pre>nada</pre>
  * 
- * <post></post>
- * @param {HTMLDivElement} form
+ * <post>nada</post>
+ * @param {HTMLFormElement} form
  * @param {string} idSelect
  */
 function GenerarSelectEleccionCategoria(form, idSelect) {
+
     var llamada = new XMLHttpRequest();
     llamada.open("GET", "http://localhost:5027/api/Categorias", false);
-
+    var imagn = document.createElement("img");
     llamada.onreadystatechange = function () {
         if (llamada.readyState < 4) {
 
+            imagn.src = "../img/carga1.png";
+            form.appendChild(imagn);
         }
         else if (llamada.readyState == 4 && llamada.status == 200) {
-           
+            imagn.remove();
             var div = document.createElement("div");
             var label = document.createElement("label");
             label.textContent = "Categoría"
@@ -103,7 +99,7 @@ function GenerarSelectEleccionCategoria(form, idSelect) {
                 option.text = arrayCategorias[i].nombreCategoria;
                 option.value = arrayCategorias[i].idCategoria;
                 select.appendChild(option);
-                
+
             }
             var boton = document.createElement("input");
             boton.type = "submit";
@@ -123,8 +119,26 @@ function GenerarSelectEleccionCategoria(form, idSelect) {
 }
 
 
-
+/**
+ * <header> GenerarPlantaParaPost() </header>
+ * 
+ * <summary>
+ * Método que se encarga de generar una planta a partir de los datos introducidos por el usario en los textboxes
+ * y llama al procedimiento "IntoducirPlantaMediantePost" para que realice sus funciones.
+ * </summary>
+ * 
+ * <pre>
+ *  el precio que venga desde input con id "Precio" debe ser mayor que 0.
+ *  
+ * </pre>
+ * 
+ * <post>
+ *     Siempre mandará la planta hacia el procedimiento IntroducirPlantaMediantePost"
+ * </post>
+ * 
+ * */
 function generarPlantaParaPost() {
+
     var planta = new clsPlanta();
     var nombre = document.getElementById("Nombre");
     var descripcion = document.getElementById("Descripcion");
@@ -145,22 +159,24 @@ function generarPlantaParaPost() {
  * <header> modificarPaginaDespuesDeInsercion() </header>
  * 
  * <summary>
- * 
+ * Mñétodo que se encarga de modificar el aspecto de la página web una vez se han insertado los
+ * datos en nuestra BBDD.
  * </summary>
  * 
  * <pre>
- * 
+ *  El elemento Html con id "formulario" debe existir 
+ *  en la página Html.
  * </pre>
  * 
  * <post>
- * 
+ *  Siempre eliminará el formulario y mostrará un alert indicandonos que la planta se insertó con éxito
  * </post>
  * 
  * */
 function modificarPaginaDespuesDeInsercion() {
     var formulario = document.getElementById("formulario");
     formulario.replaceChildren("");
-    GenerarFormulario();
+
     alert("La planta fue insertada con éxito");
 
 
@@ -185,20 +201,26 @@ function modificarPaginaDespuesDeInsercion() {
  * @param {clsPlanta} planta
  * */
 function IntroducirPlantaMediantePost(planta) {
+    var imagn = document.createElement("img");
     var llamada = new XMLHttpRequest();
     llamada.open("POST", "http://localhost:5027/api/Plantas", false);
     var json = JSON.stringify(planta);
     llamada.setRequestHeader('Content-type', 'text/json; charset=utf-8');
     llamada.onreadystatechange = function () {
         if (llamada.readyState < 4) {
-        } else if (llamada.readyState == 4 && llamada.status == 200) {
+            var form = document.getElementById("formulario");
 
+            form.appendChild(imagn);
+        } else if (llamada.readyState == 4 && llamada.status == 200) {
+            imagn.remove();
             modificarPaginaDespuesDeInsercion();
 
         }
     };
-    
+
     llamada.send(json);
+
+
 }
 
 
@@ -209,7 +231,9 @@ function IntroducirPlantaMediantePost(planta) {
  * Método que se encarga de, dado un id y un elemento Html form,
  * generar un elemento div, que será hijo del form,
  * con dis hijos, un elemento label cuyo textContent sea igual al idText pasado como parámetro
- * y un input text.
+ * y un input de tipo text.
+ * <pre>nada </pre>
+ * <post>nada</post>
  * @param {HTMLDivElement} form
  * @param {string} idText
  */
