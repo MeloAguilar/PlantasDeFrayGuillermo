@@ -97,7 +97,7 @@ function DeletePlanta(planta) {
             } else if (llamada.readyState == 4 && llamada.status == 200) {
                 imagn.remove();
                 alert(planta.nombrePlanta + " se eliminó con éxito.");
-                document.getElementById("fila" + planta.idPlanta).remove();
+                RealizarLlamadaInicial();
             }
         };
         llamada.send(null);
