@@ -11,6 +11,12 @@ class clsPlanta {
     }
 }
 
+
+var listaPlantas;
+var arrayCat;
+
+
+
 class clsCategoria {
     constructor(idCategoria, nombreCategoria) {
         idCategoria: idCategoria;
@@ -61,29 +67,14 @@ function mostrar() {
     var llamada2 = new XMLHttpRequest();
     var imagn = document.createElement("img");
     imagn.src = "../img/carga1.png";
-    llamada2.open("GET", "http://localhost:5027/api/Categorias", false);
     var llamada = new XMLHttpRequest();
-    llamada.open("GET", "http://localhost:5027/api/Plantas", true);
-    var arrayCat;
-    llamada2.onreadystatechange = function () {
-        if (llamada2.readyState < 4) {
-            var div = document.getElementById("imagen");
+    llamada.open("GET", "http://localhost:5027/api/Plantas", false);
+    llamada2.open("GET", "http://localhost:5027/api/Categorias", false);
 
-            div.appendChild(imagn);
-        }
-        else if ((llamada2.readyState == 4 && llamada2.status == 200)) {
-            imagn.remove();
-            arrayCat = JSON.parse(llamada2.responseText);
-            RellenarSelectCategorias(arrayCat);
-
-
-        }
-    };
-    llamada2.send();
 
 
     llamada.onreadystatechange = function () {
-        var listaPlantas;
+
         if (llamada.readyState < 4) {
             var div = document.getElementById("imagen");
 
@@ -98,9 +89,28 @@ function mostrar() {
 
         }
     };
+    llamada2.onreadystatechange = function () {
+        if (llamada2.readyState < 4) {
+            var div = document.getElementById("imagen");
+
+            div.appendChild(imagn);
+        }
+        else if ((llamada2.readyState == 4 && llamada2.status == 200)) {
+            imagn.remove();
+            arrayCat = JSON.parse(llamada2.responseText);
+            RellenarSelectCategorias(arrayCat);
+
+            //Para asegurarnos de que el array de categorias esté relleno
+            llamada.send();
+        }
+    };
 
 
-    llamada.send();
+
+
+
+    llamada2.send();
+
 }
 
 
@@ -145,16 +155,12 @@ function CrearCelda(fila, texto) {
  * @param {JSON} arrayCat
  */
 function RellenarSelectCategorias(arrayCat) {
-    var conteo = 1;
     for (var i = 0; i < arrayCat.length; i++) {
         const option = document.createElement("option")
-        option.setAttribute("id", "op" + conteo);
         option.text = arrayCat[i].nombreCategoria;
         option.value = arrayCat[i].idCategoria;
         document.getElementById("selectacion").appendChild(option);
-        conteo++;
     }
-    document.getElementById("op1").setAttribute("selected", "true")
 
 }
 
@@ -230,12 +236,12 @@ function RellenarPlantas(arrayPlantas, arrayCategorias) {
  */
 function ElegirCategoria(arrayCategorias, idCategoriaPlanta, fila) {
     var categoria;
-    var salir = false;
-    for (var i = 0; i < arrayCategorias.length && !salir; i++) {
+    var encontrado = false;
+    for (var i = 0; i < arrayCategorias.length && !encontrado; i++) {
         if (idCategoriaPlanta == arrayCategorias[i].idCategoria) {
             CrearCelda(fila, arrayCategorias[i].nombreCategoria);
             categoria = arrayCategorias[i];
-            salir = true;
+            encontrado = true;
         }
     }
     return categoria;
@@ -263,39 +269,9 @@ function ElegirCategoria(arrayCategorias, idCategoriaPlanta, fila) {
  * 
  * */
 function RecogerDatosChecks() {
-    var imagn = document.createElement("img");
-    imagn.src = "../img/carga1.png";
-    var success = confirm("¿Estas seguro de que deseas cambiar la categoria de las plantas seleccionadas?");
-
-    if (success) {
-        var llamada = new XMLHttpRequest();
-        llamada.open("GET", "http://localhost:5027/api/Plantas", true);
-        llamada.onreadystatechange = function () {
-            if (llamada.readyState < 4) {
-                var div = document.getElementById("imagen");
-
-                div.appendChild(imagn);
-            } else if (llamada.readyState == 4 && llamada.status == 200) {
-                imagn.remove();
-                var jsonPlantas = JSON.parse(llamada.responseText);
-                CambiarCategoriasVariasPlantas(jsonPlantas);
-            }
-
-        };
-
-        llamada.send();
-    }
-    else {
-        alert("No se modificarán las plantas");
-        var checks = document.querySelectorAll("input");
-        for (var i = 0; i < checks.length; i++) {
-            checks[i].checked = false;
-        }
-    }
-
-
-
+    CambiarCategoriasVariasPlantas(listaPlantas);
 }
+
 
 
 /**
@@ -307,33 +283,14 @@ function RecogerDatosChecks() {
  * 
  */
 function ComprobarValueCheckBoxes() {
-    var imagn = document.createElement("img");
-    imagn.src = "../img/carga1.png";
-    var tabla = document.getElementById("tbody");
     var select = document.getElementById("selectacion");
     var valorSeleccionado = select.options[select.selectedIndex].value;
-    var llamada = new XMLHttpRequest();
-    llamada.open("GET", "http://localhost:5027/api/Plantas", true);
 
-    llamada.onreadystatechange = function () {
-        if (llamada.readyState < 4) {
-            var div = document.getElementById("imagen");
+    for (var i = 0; i < listaPlantas.length; i++) {
 
-            div.appendChild(imagn);
-        } else if (llamada.status == 200 && llamada.readyState == 4) {
-            imagn.remove();
-            var arrayPlantas = JSON.parse(llamada.responseText);
-            for (var i = 0; i < arrayPlantas.length; i++) {
-
-                var check = document.getElementById("checkbox" + arrayPlantas[i].idPlanta);
-                check.value = valorSeleccionado;
-            }
-
-        }
-    };
-    llamada.send();
-
-
+        var check = document.getElementById("checkbox" + listaPlantas[i].idPlanta);
+        check.value = valorSeleccionado;
+    }
 }
 /**
  * <header> cambiarCategoriaPlanta(jsonPlantas) </header>
@@ -433,29 +390,10 @@ function PutPlanta(planta) {
  * <post></post<
  */
 function ModificarTablaTrasPut(planta) {
-    var imagn = document.createElement("img");
-    imagn.src = "../img/carga1.png";
+
+            GenerarFila(planta, arrayCat);
 
 
-    var llamada = new XMLHttpRequest();
-    llamada.open("GET", "http://localhost:5027/api/Categorias", true);
-    llamada.onreadystatechange = function () {
-        if (llamada.readyState < 4) {
-
-            var div = document.getElementById("imagen");
-
-            div.appendChild(imagn);
-
-
-
-        } else if (llamada.readyState == 4 && llamada.status == 200) {
-            imagn.remove();
-            var arrayCategoria = JSON.parse(llamada.responseText);
-
-            GenerarFila(planta, arrayCategoria);
-        }
-    };
-    llamada.send();
 }
 
 

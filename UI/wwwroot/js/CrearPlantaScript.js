@@ -155,32 +155,7 @@ function generarPlantaParaPost() {
 
 }
 
-/**
- * <header> modificarPaginaDespuesDeInsercion() </header>
- * 
- * <summary>
- * Mñétodo que se encarga de modificar el aspecto de la página web una vez se han insertado los
- * datos en nuestra BBDD.
- * </summary>
- * 
- * <pre>
- *  El elemento Html con id "formulario" debe existir 
- *  en la página Html.
- * </pre>
- * 
- * <post>
- *  Siempre eliminará el formulario y mostrará un alert indicandonos que la planta se insertó con éxito
- * </post>
- * 
- * */
-function modificarPaginaDespuesDeInsercion() {
-    var formulario = document.getElementById("formulario");
-    formulario.replaceChildren("");
 
-    alert("La planta fue insertada con éxito");
-
-
-}
 
 
 /**
@@ -213,7 +188,7 @@ function IntroducirPlantaMediantePost(planta) {
             form.appendChild(imagn);
         } else if (llamada.readyState == 4 && llamada.status == 200) {
             imagn.remove();
-            modificarPaginaDespuesDeInsercion();
+            window.location.replace("http://localhost:5027/Paginas/Index.html");
 
         }
     };

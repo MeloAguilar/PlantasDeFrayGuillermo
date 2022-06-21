@@ -20,7 +20,8 @@ class clsCategoria {
     }
 }
 
-
+var arrayPlantas;
+var arrayCategorias;
 
 function InicializaEventos() {
     document.getElementById("tbody").addEventListener("load", RealizarLlamadaInicial(), true);
@@ -55,29 +56,12 @@ function InicializaEventos() {
  *
  * */
 function EliminarRegistrosSeleccionados() {
-    var llamada = new XMLHttpRequest();
-    var imagn = document.createElement("img");
-    imagn.src = "../img/carga1.png";
-    llamada.open("GET", "http://localhost:5027/api/Plantas", true);
-
-    llamada.onreadystatechange = function () {
-        if (llamada.readyState < 4) {
-            var div = document.getElementById("imagen");
-
-            div.appendChild(imagn);
+    for (var i = 0; i < arrayPlantas.length; i++) {
+        var check = document.getElementById("checkbox" + arrayPlantas[i].idPlanta);
+        if (check.checked) {
+            DeletePlanta(arrayPlantas[i]);
         }
-        else if (llamada.readyState == 4 && llamada.status == 200) {
-            imagn.remove();
-            var arrayPlantas = JSON.parse(llamada.responseText);
-            for (var i = 0; i < arrayPlantas.length; i++) {
-                var check = document.getElementById("checkbox" + arrayPlantas[i].idPlanta);
-                if (check.checked) {
-                    DeletePlanta(arrayPlantas[i]);
-                }
-            }
-        }
-    };
-    llamada.send();
+    }
 }
 
 /**
@@ -119,9 +103,9 @@ function DeletePlanta(planta) {
         llamada.send(null);
     } else {
         alert(planta.nombrePlanta + " no se eliminó");
-        document.getElementById("checkbox"+planta.idPlanta).checked = false;
+        document.getElementById("checkbox" + planta.idPlanta).checked = false;
     }
-    
+
 
 }
 
@@ -137,7 +121,7 @@ function RealizarLlamadaInicial() {
     var imagn = document.createElement("img");
     imagn.src = "../img/carga1.png";
     var llamada = new XMLHttpRequest();
-    llamada.open("GET", "http://localhost:5027/api/Plantas", true);
+    llamada.open("GET", "http://localhost:5027/api/Plantas", false);
 
     llamada.onreadystatechange = function () {
         if (llamada.readyState < 4) {
@@ -147,8 +131,8 @@ function RealizarLlamadaInicial() {
         }
         else if (llamada.readyState == 4 && llamada.status == 200) {
             imagn.remove();
-            var arrayPlantas = JSON.parse(llamada.responseText);
-            GenerarListadoPlantas(arrayPlantas);
+            arrayPlantas = JSON.parse(llamada.responseText);
+            GenerarListadoPlantas();
         }
     };
     llamada.send();
@@ -167,13 +151,12 @@ function RealizarLlamadaInicial() {
  * 
  * <post>ninguna</post>
  * 
- * @param {Array<clsPlanta>} arrayPlantas
  */
-function GenerarListadoPlantas(arrayPlantas) {
+function GenerarListadoPlantas() {
     var tabla = document.getElementById("tbody");
     for (var i = 0; i < arrayPlantas.length; i++) {
         var fila = document.createElement("tr");
-        fila.id = "fila"+arrayPlantas[i].idPlanta;
+        fila.id = "fila" + arrayPlantas[i].idPlanta;
         CrearCelda(fila, arrayPlantas[i].nombrePlanta);
         GenerarNombreCategoria(arrayPlantas[i].idCategoria, fila);
         var idPlantaString = arrayPlantas[i].idPlanta.toString();
@@ -217,7 +200,7 @@ function GenerarNombreCategoria(idCategoria, fila) {
             div.appendChild(imagn);
         } else if (llamada.readyState == 4 && llamada.status == 200) {
             imagn.remove();
-            var arrayCategorias = JSON.parse(llamada.responseText);
+            arrayCategorias = JSON.parse(llamada.responseText);
             var nombreCat;
             categoria = ObtenerCategoria(idCategoria, arrayCategorias);
             nombreCat = categoria.nombreCategoria;
@@ -239,9 +222,8 @@ function GenerarNombreCategoria(idCategoria, fila) {
  * <pre>nada</pre>
  * <post>nada</post>
  * @param {Int32Array} idCategoria
- * @param {Array<clsCategoria>} arrayCategorias
  */
-function ObtenerCategoria(idCategoria, arrayCategorias) {
+function ObtenerCategoria(idCategoria) {
     var categoria;
     var salir = false;
     for (var i = 0; i < arrayCategorias.length && !salir; i++) {
