@@ -181,15 +181,17 @@ function IntroducirPlantaMediantePost(planta) {
     llamada.open("POST", "http://localhost:5027/api/Plantas", false);
     var json = JSON.stringify(planta);
     llamada.setRequestHeader('Content-type', 'text/json; charset=utf-8');
+
+
     llamada.onreadystatechange = function () {
         if (llamada.readyState < 4) {
             var form = document.getElementById("formulario");
 
             form.appendChild(imagn);
         } else if (llamada.readyState == 4 && llamada.status == 200) {
-            imagn.remove();
-            window.location.replace("http://localhost:5027/Paginas/Index.html");
 
+            document.getElementById("formulario").remove();
+            window.location.assign("http://localhost:5027/Paginas/Index.html") ;
         }
     };
 

@@ -61,7 +61,13 @@ function EliminarRegistrosSeleccionados() {
         if (check.checked) {
             DeletePlanta(arrayPlantas[i]);
         }
+   
     }
+    document.getElementById("tbody").remove();
+    var a = document.createElement("tbody");
+    a.id = "tbody";
+    document.getElementById("tabla").appendChild(a);
+    RealizarLlamadaInicial();
 }
 
 /**
@@ -97,7 +103,7 @@ function DeletePlanta(planta) {
             } else if (llamada.readyState == 4 && llamada.status == 200) {
                 imagn.remove();
                 alert(planta.nombrePlanta + " se eliminó con éxito.");
-                RealizarLlamadaInicial();
+             
             }
         };
         llamada.send(null);
